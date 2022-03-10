@@ -18,6 +18,22 @@ class FilenameTest extends TestCase
     }
 
     /**
+     * @dataProvider filenameDataProvider
+     */
+    public function testGetParts(
+        string $value,
+        string $expectedPath,
+        string $expectedName,
+        string $expectedExtension
+    ): void {
+        $filename = Filename::parse($value);
+
+        self::assertSame($expectedPath, $filename->path);
+        self::assertSame($expectedName, $filename->name);
+        self::assertSame($expectedExtension, $filename->extension);
+    }
+
+    /**
      * @return array<mixed>
      */
     public function filenameDataProvider(): array
@@ -25,92 +41,33 @@ class FilenameTest extends TestCase
         return [
             'empty' => [
                 'filename' => '',
+                'expectedPath' => '',
+                'expectedName' => '',
+                'expectedExtension' => '',
             ],
             'name only' => [
                 'filename' => 'filename',
+                'expectedPath' => '',
+                'expectedName' => 'filename',
+                'expectedExtension' => '',
             ],
             'extension only' => [
                 'filename' => '.yaml',
+                'expectedPath' => '',
+                'expectedName' => '',
+                'expectedExtension' => 'yaml',
             ],
             'name and extension' => [
                 'filename' => 'filename.yaml',
+                'expectedPath' => '',
+                'expectedName' => 'filename',
+                'expectedExtension' => 'yaml',
             ],
             'has path' => [
                 'filename' => 'path/to/filename.yml',
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getExtensionDataProvider
-     */
-    public function testGetExtension(Filename $filename, string $expected): void
-    {
-        self::assertSame($expected, $filename->getExtension());
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function getExtensionDataProvider(): array
-    {
-        return [
-            'empty' => [
-                'filename' => Filename::parse(''),
-                'expected' => '',
-            ],
-            'no extension' => [
-                'filename' => Filename::parse('filename'),
-                'expected' => '',
-            ],
-            'empty extension' => [
-                'filename' => Filename::parse('filename.'),
-                'expected' => '',
-            ],
-            'single dot' => [
-                'filename' => Filename::parse('filename.yaml'),
-                'expected' => 'yaml',
-            ],
-            'multiple dots' => [
-                'filename' => Filename::parse('multiple.filename.yml'),
-                'expected' => 'yml',
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider getNameDataProvider
-     */
-    public function testGetName(Filename $filename, string $expected): void
-    {
-        self::assertSame($expected, $filename->getName());
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function getNameDataProvider(): array
-    {
-        return [
-            'empty' => [
-                'filename' => Filename::parse(''),
-                'expected' => '',
-            ],
-            'no extension' => [
-                'filename' => Filename::parse('filename'),
-                'expected' => 'filename',
-            ],
-            'empty extension' => [
-                'filename' => Filename::parse('filename.'),
-                'expected' => 'filename',
-            ],
-            'single dot' => [
-                'filename' => Filename::parse('filename.yaml'),
-                'expected' => 'filename',
-            ],
-            'multiple dots' => [
-                'filename' => Filename::parse('multiple.filename.yml'),
-                'expected' => 'multiple.filename',
+                'expectedPath' => 'path/to',
+                'expectedName' => 'filename',
+                'expectedExtension' => 'yml',
             ],
         ];
     }

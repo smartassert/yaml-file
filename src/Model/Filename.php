@@ -6,7 +6,11 @@ namespace SmartAssert\YamlFile\Model;
 
 class Filename implements \Stringable
 {
+    private const EXTENSION_SEPARATOR = '.';
+    private const PATH_SEPARATOR = '/';
+
     public function __construct(
+        public readonly string $path,
         public readonly string $name,
         public readonly string $extension,
     ) {
@@ -14,34 +18,39 @@ class Filename implements \Stringable
 
     public function __toString(): string
     {
+        $value = '';
+        if ('' !== $this->path) {
+            $value .= $this->path . self::PATH_SEPARATOR;
+        }
+
         if ('' === $this->name && '' === $this->extension) {
-            return '';
+            return $value;
         }
 
         if ('' !== $this->name && '' === $this->extension) {
-            return $this->name;
+            return $value . $this->name;
         }
 
-        return implode('.', [$this->name, $this->extension]);
+        return $value . implode(self::EXTENSION_SEPARATOR, [$this->name, $this->extension]);
     }
 
     public static function parse(string $value): Filename
     {
-        $lastDotPosition = strrpos($value, '.');
+        $lastPathSeparatorPosition = strrpos($value, self::PATH_SEPARATOR);
 
-        $name = false === $lastDotPosition ? $value : substr($value, 0, $lastDotPosition);
-        $extension = false === $lastDotPosition ? '' : substr($value, ($lastDotPosition) + 1);
+        $path = '';
+        $nameAndExtension = $value;
 
-        return new Filename($name, $extension);
-    }
+        if (is_int($lastPathSeparatorPosition)) {
+            $path = substr($value, 0, $lastPathSeparatorPosition);
+            $nameAndExtension = substr($value, ($lastPathSeparatorPosition) + 1);
+        }
 
-    public function getExtension(): string
-    {
-        return $this->extension;
-    }
+        $lastDotPosition = strrpos($nameAndExtension, self::EXTENSION_SEPARATOR);
 
-    public function getName(): string
-    {
-        return $this->name;
+        $name = false === $lastDotPosition ? $value : substr($nameAndExtension, 0, $lastDotPosition);
+        $extension = false === $lastDotPosition ? '' : substr($nameAndExtension, ($lastDotPosition) + 1);
+
+        return new Filename($path, $name, $extension);
     }
 }
