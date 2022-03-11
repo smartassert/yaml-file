@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Collection;
 
+use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Provider\ProviderInterface;
 
@@ -12,6 +13,9 @@ class Serializer
     private const PAYLOAD_INDENT = '  ';
     private const TEMPLATE = '"%s": |' . "\n" . self::PAYLOAD_INDENT . '%s';
 
+    /**
+     * @throws ProvisionException
+     */
     public function serialize(ProviderInterface $provider): string
     {
         $serializedFiles = [];
