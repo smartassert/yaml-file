@@ -5,51 +5,52 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Collection\Serializer;
+use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Provider\ArrayProvider;
 use SmartAssert\YamlFile\Provider\ProviderInterface;
+use Symfony\Component\Yaml\Parser;
 
-class SerializerTest extends TestCase
+class DeserializerTest extends TestCase
 {
-    private Serializer $serializer;
+    private Deserializer $deserializer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->serializer = new Serializer();
+        $this->deserializer = new Deserializer(new Parser());
     }
 
     /**
-     * @dataProvider serializeDataProvider
+     * @dataProvider deserializeDataProvider
      */
-    public function testSerialize(ProviderInterface $provider, string $expected): void
+    public function testDeserialize(string $serialized, ProviderInterface $expected): void
     {
-        self::assertSame($expected, $this->serializer->serialize($provider));
+        self::assertEquals($expected, $this->deserializer->deserialize($serialized));
     }
 
     /**
      * @return array<mixed>
      */
-    public function serializeDataProvider(): array
+    public function deserializeDataProvider(): array
     {
         $singleLineFile = YamlFile::create('filename1.yaml', '- file1line1');
         $multiLineFile1 = YamlFile::create('filename2.yaml', '- file2line1' . "\n" . '- file2line2');
         $multilineFile2 = YamlFile::create('filename3.yaml', '- file3line1' . "\n" . '- file3line2');
 
-        $expectedSingleLineFile = <<< 'EOF'
+        $serializedSingleLineFile = <<< 'EOF'
         "filename1.yaml": |
           - file1line1
         EOF;
 
-        $expectedMultiLineFile1 = <<< 'EOF'
+        $serializedMultiLineFile1 = <<< 'EOF'
         "filename2.yaml": |
           - file2line1
           - file2line2
         EOF;
 
-        $expectedMultiLineFile2 = <<< 'EOF'
+        $serializedMultiLineFile2 = <<< 'EOF'
         "filename3.yaml": |
           - file3line1
           - file3line2
@@ -57,20 +58,20 @@ class SerializerTest extends TestCase
 
         return [
             'empty' => [
-                'provider' => new ArrayProvider([]),
-                'expected' => '',
+                'serialized' => '',
+                'expected' => new ArrayProvider([]),
             ],
             'single yaml file, single line' => [
-                'provider' => new ArrayProvider([$singleLineFile]),
-                'expected' => $expectedSingleLineFile,
+                'serialized' => $serializedSingleLineFile,
+                'expected' => new ArrayProvider([$singleLineFile]),
             ],
             'single multiline yaml file' => [
-                'provider' => new ArrayProvider([$multiLineFile1]),
-                'expected' => $expectedMultiLineFile1
+                'serialized' => $serializedMultiLineFile1,
+                'expected' => new ArrayProvider([$multiLineFile1]),
             ],
             'multiple multiline yaml files' => [
-                'provider' => new ArrayProvider([$multiLineFile1, $multilineFile2]),
-                'expected' => $expectedMultiLineFile1 . "\n\n" . $expectedMultiLineFile2,
+                'serialized' => $serializedMultiLineFile1 . "\n\n" . $serializedMultiLineFile2,
+                'expected' => new ArrayProvider([$multiLineFile1, $multilineFile2]),
             ],
         ];
     }
