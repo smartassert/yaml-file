@@ -6,7 +6,6 @@ namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\Serializer;
-use SmartAssert\YamlFile\Model\SerializableYamlFile;
 use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Provider\ArrayProvider;
 use SmartAssert\YamlFile\Provider\ProviderInterface;
@@ -26,21 +25,43 @@ class SerializerTest extends TestCase
      */
     public function serializeDataProvider(): array
     {
-        $file1 = YamlFile::create('filename1.yaml', '- line1' . "\n" . '- line2' . "\n" . '- line3');
-        $file2 = YamlFile::create('filename2.yaml', '- line1' . "\n" . '- line2' . "\n" . '- line3');
+        $singleLineFile = YamlFile::create('filename1.yaml', '- file1line1');
+        $multiLineFile1 = YamlFile::create('filename2.yaml', '- file2line1' . "\n" . '- file2line2');
+        $multilineFile2 = YamlFile::create('filename3.yaml', '- file3line1' . "\n" . '- file3line2');
+
+        $expectedSingleLineFile = <<< 'EOF'
+        "filename1.yaml": |
+          - file1line1
+        EOF;
+
+        $expectedMultiLineFile1 = <<< 'EOF'
+        "filename2.yaml": |
+          - file2line1
+          - file2line2
+        EOF;
+
+        $expectedMultiLineFile2 = <<< 'EOF'
+        "filename3.yaml": |
+          - file3line1
+          - file3line2
+        EOF;
 
         return [
             'empty' => [
                 'provider' => new ArrayProvider([]),
                 'expected' => '',
             ],
-            'single yaml file' => [
-                'provider' => new ArrayProvider([$file1]),
-                'expected' => (string) new SerializableYamlFile($file1),
+            'single yaml file, single line' => [
+                'provider' => new ArrayProvider([$singleLineFile]),
+                'expected' => $expectedSingleLineFile,
             ],
-            'multiple yaml files' => [
-                'provider' => new ArrayProvider([$file1, $file2]),
-                'expected' => new SerializableYamlFile($file1) . "\n\n" . new SerializableYamlFile($file2),
+            'single multiline yaml file' => [
+                'provider' => new ArrayProvider([$multiLineFile1]),
+                'expected' => $expectedMultiLineFile1
+            ],
+            'multiple multiline yaml files' => [
+                'provider' => new ArrayProvider([$multiLineFile1, $multilineFile2]),
+                'expected' => $expectedMultiLineFile1 . "\n\n" . $expectedMultiLineFile2,
             ],
         ];
     }
