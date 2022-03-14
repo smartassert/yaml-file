@@ -6,8 +6,11 @@ namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Model\Filename;
+use SmartAssert\YamlFile\Model\Validation\ContentContext;
+use SmartAssert\YamlFile\Model\Validation\FilenameContext;
+use SmartAssert\YamlFile\Model\Validation\Validation;
+use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 use SmartAssert\YamlFile\Model\Validation\YamlFileContext;
-use SmartAssert\YamlFile\Model\Validation\YamlFileValidation;
 use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Validator\ContentValidator;
 use SmartAssert\YamlFile\Validator\YamlFilenameValidator;
@@ -19,7 +22,7 @@ class YamlFileValidatorTest extends TestCase
     /**
      * @dataProvider validateDataProvider
      */
-    public function testValidate(YamlFile $yamlFile, YamlFileValidation $expected): void
+    public function testValidate(YamlFile $yamlFile, ValidationInterface $expected): void
     {
         $validator = new YamlFileValidator(
             new YamlFilenameValidator(),
@@ -42,16 +45,26 @@ class YamlFileValidatorTest extends TestCase
                     new Filename('', ' ', 'yaml'),
                     '- valid content'
                 ),
-                'expected' => YamlFileValidation::createInvalid(YamlFileContext::FILENAME),
+                'expected' => Validation::createInvalid(
+                    YamlFileContext::FILENAME,
+                    null,
+                    Validation::createInvalid(
+                        FilenameContext::NAME
+                    )
+                ),
             ],
             'invalid content is invalid' => [
                 'yamlFile' => new YamlFile(
                     new Filename('', 'filename', 'yaml'),
                     '  invalid' . "\n" . 'yaml'
                 ),
-                'expected' => YamlFileValidation::createInvalid(
+                'expected' => Validation::createInvalid(
                     YamlFileContext::CONTENT,
-                    'Unable to parse at line 1 (near "  invalid").'
+                    null,
+                    Validation::createInvalid(
+                        ContentContext::IS_YAML,
+                        'Unable to parse at line 1 (near "  invalid").'
+                    ),
                 ),
             ],
             'valid' => [
@@ -59,7 +72,7 @@ class YamlFileValidatorTest extends TestCase
                     new Filename('', 'filename', 'yaml'),
                     '- valid content'
                 ),
-                'expected' => YamlFileValidation::createValid(),
+                'expected' => Validation::createValid(),
             ],
         ];
     }

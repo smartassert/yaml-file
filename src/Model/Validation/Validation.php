@@ -21,7 +21,7 @@ class Validation implements ValidationInterface
 
     public static function createInvalid(
         ?ContextInterface $context,
-        ?string $errorMessage,
+        ?string $errorMessage = null,
         ?ValidationInterface $previous = null
     ): ValidationInterface {
         return new Validation(false, $context, $errorMessage, $previous);

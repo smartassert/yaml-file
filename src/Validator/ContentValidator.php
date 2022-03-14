@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Validator;
 
 use SmartAssert\YamlFile\Model\Validation\ContentContext;
-use SmartAssert\YamlFile\Model\Validation\ContentValidation;
+use SmartAssert\YamlFile\Model\Validation\Validation;
+use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -16,18 +17,18 @@ class ContentValidator
     ) {
     }
 
-    public function validate(string $content): ContentValidation
+    public function validate(string $content): ValidationInterface
     {
         if ('' === trim($content)) {
-            return ContentValidation::createInvalid(ContentContext::NOT_EMPTY);
+            return Validation::createInvalid(ContentContext::NOT_EMPTY);
         }
 
         try {
             $this->yamlParser->parse($content);
         } catch (ParseException $e) {
-            return ContentValidation::createInvalid(ContentContext::IS_YAML, $e->getMessage());
+            return Validation::createInvalid(ContentContext::IS_YAML, $e->getMessage());
         }
 
-        return ContentValidation::createValid();
+        return Validation::createValid();
     }
 }

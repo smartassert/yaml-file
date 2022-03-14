@@ -6,27 +6,28 @@ namespace SmartAssert\YamlFile\Validator;
 
 use SmartAssert\YamlFile\Model\Filename;
 use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\YamlFilenameValidation;
+use SmartAssert\YamlFile\Model\Validation\Validation;
+use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 
 class YamlFilenameValidator
 {
     public const VALID_EXTENSIONS = ['yml', 'yaml'];
 
-    public function validate(Filename $filename): YamlFilenameValidation
+    public function validate(Filename $filename): ValidationInterface
     {
         if (false === $this->isPathValid($filename->path)) {
-            return YamlFilenameValidation::createInvalid(FilenameContext::PATH);
+            return Validation::createInvalid(FilenameContext::PATH);
         }
 
         if (false === $this->isPartValid($filename->name)) {
-            return YamlFilenameValidation::createInvalid(FilenameContext::NAME);
+            return Validation::createInvalid(FilenameContext::NAME);
         }
 
         if (false === $this->isExtensionValid($filename->extension)) {
-            return YamlFilenameValidation::createInvalid(FilenameContext::EXTENSION);
+            return Validation::createInvalid(FilenameContext::EXTENSION);
         }
 
-        return YamlFilenameValidation::createValid();
+        return Validation::createValid();
     }
 
     private function isPathValid(string $path): bool
