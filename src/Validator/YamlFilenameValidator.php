@@ -4,31 +4,26 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Validator;
 
-use SmartAssert\YamlFile\Exception\UnexpectedSubjectTypeException;
 use SmartAssert\YamlFile\Model\Filename;
 use SmartAssert\YamlFile\Model\Validation\FilenameContext;
 use SmartAssert\YamlFile\Model\Validation\Validation;
 use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 
-class YamlFilenameValidator implements ValidatorInterface
+class YamlFilenameValidator
 {
     public const VALID_EXTENSIONS = ['yml', 'yaml'];
 
-    public function validate(string|object $subject): ValidationInterface
+    public function validate(Filename $filename): ValidationInterface
     {
-        if (!$subject instanceof Filename) {
-            throw UnexpectedSubjectTypeException::create(Filename::class, $subject);
-        }
-
-        if (false === $this->isPathValid($subject->path)) {
+        if (false === $this->isPathValid($filename->path)) {
             return Validation::createInvalid(FilenameContext::PATH);
         }
 
-        if (false === $this->isPartValid($subject->name)) {
+        if (false === $this->isPartValid($filename->name)) {
             return Validation::createInvalid(FilenameContext::NAME);
         }
 
-        if (false === $this->isExtensionValid($subject->extension)) {
+        if (false === $this->isExtensionValid($filename->extension)) {
             return Validation::createInvalid(FilenameContext::EXTENSION);
         }
 
