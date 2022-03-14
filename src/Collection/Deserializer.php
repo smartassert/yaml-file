@@ -7,6 +7,7 @@ namespace SmartAssert\YamlFile\Collection;
 use SmartAssert\YamlFile\Model\YamlFile;
 use SmartAssert\YamlFile\Provider\ArrayProvider;
 use SmartAssert\YamlFile\Provider\ProviderInterface;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
 class Deserializer
@@ -16,6 +17,9 @@ class Deserializer
     ) {
     }
 
+    /**
+     * @throws ParseException
+     */
     public function deserialize(string $content): ProviderInterface
     {
         $yamlFiles = [];
