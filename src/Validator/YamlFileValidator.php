@@ -8,7 +8,7 @@ use SmartAssert\YamlFile\Exception\UnexpectedSubjectTypeException;
 use SmartAssert\YamlFile\Model\Validation\Validation;
 use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 use SmartAssert\YamlFile\Model\Validation\YamlFileContext;
-use SmartAssert\YamlFile\Model\YamlFile; 
+use SmartAssert\YamlFile\Model\YamlFile;
 
 class YamlFileValidator implements ValidatorInterface
 {
