@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Model\Validation;
 
-enum FilenameContext
+enum FilenameContext implements ContextInterface
 {
     case NONE;
     case PATH;
