@@ -7,7 +7,8 @@ namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Model\Filename;
 use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\YamlFilenameValidation;
+use SmartAssert\YamlFile\Model\Validation\Validation;
+use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
 use SmartAssert\YamlFile\Validator\YamlFilenameValidator;
 
 class YamlFilenameValidatorTest extends TestCase
@@ -15,7 +16,7 @@ class YamlFilenameValidatorTest extends TestCase
     /**
      * @dataProvider validateDataProvider
      */
-    public function testValidate(Filename $filename, YamlFilenameValidation $expected): void
+    public function testValidate(Filename $filename, ValidationInterface $expected): void
     {
         $validator = new YamlFilenameValidator();
 
@@ -30,51 +31,51 @@ class YamlFilenameValidatorTest extends TestCase
         return [
             'path invalid, part contains back slash' => [
                 'filename' => new Filename('path/to/\\invalid', 'filename', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::PATH),
+                'expected' => Validation::createInvalid(FilenameContext::PATH),
             ],
             'path invalid, part contains null byte' => [
                 'filename' => new Filename('path/to/' . chr(0) . 'invalid', 'filename', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::PATH),
+                'expected' => Validation::createInvalid(FilenameContext::PATH),
             ],
             'path invalid, part contains space' => [
                 'filename' => new Filename('path/to/ invalid', 'filename', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::PATH),
+                'expected' => Validation::createInvalid(FilenameContext::PATH),
             ],
             'name invalid, is empty' => [
                 'filename' => new Filename('path', '', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::NAME),
+                'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'name invalid, contains back slash' => [
                 'filename' => new Filename('path', 'contains\\backslash', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::NAME),
+                'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'name invalid, contains null byte' => [
                 'filename' => new Filename('path', 'contains' . chr(0) . 'null-byte', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::NAME),
+                'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'name invalid, contains space' => [
                 'filename' => new Filename('path', 'contains space', 'yaml'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::NAME),
+                'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'extension invalid, not yml, yaml' => [
                 'filename' => new Filename('path', 'filename', 'txt'),
-                'expected' => YamlFilenameValidation::createInvalid(FilenameContext::EXTENSION),
+                'expected' => Validation::createInvalid(FilenameContext::EXTENSION),
             ],
             'valid, path empty, name non-empty, extension yml' => [
                 'filename' => new Filename('', 'filename', 'yml'),
-                'expected' => YamlFilenameValidation::createValid(),
+                'expected' => Validation::createValid(),
             ],
             'valid, path empty, name non-empty, extension yaml' => [
                 'filename' => new Filename('', 'filename', 'yaml'),
-                'expected' => YamlFilenameValidation::createValid(),
+                'expected' => Validation::createValid(),
             ],
             'valid, path non-empty, name non-empty, extension yml' => [
                 'filename' => new Filename('path/not/empty', 'filename', 'yml'),
-                'expected' => YamlFilenameValidation::createValid(),
+                'expected' => Validation::createValid(),
             ],
             'valid, path non-empty, name non-empty, extension yaml' => [
                 'filename' => new Filename('path/not/empty', 'filename', 'yaml'),
-                'expected' => YamlFilenameValidation::createValid(),
+                'expected' => Validation::createValid(),
             ],
         ];
     }
