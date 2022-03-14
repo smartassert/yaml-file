@@ -40,9 +40,11 @@ class Validation implements ValidationInterface
     public function getErrorMessage(): ?string
     {
         $message = $this->errorMessage;
+        $previous = $this->previous;
 
-        while (null === $message && ($previous = $this->previous) instanceof ValidationInterface) {
+        while (null === $message && $previous instanceof ValidationInterface) {
             $message = $previous->getErrorMessage();
+            $previous = $previous->getPrevious();
         }
 
         return $message;
