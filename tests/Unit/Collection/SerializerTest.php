@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Collection\Serializer;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\YamlFile;
 
 class SerializerTest extends TestCase
 {

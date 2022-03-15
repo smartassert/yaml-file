@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Filename;
+use SmartAssert\YamlFile\Filename;
 use SmartAssert\YamlFile\Validation\FilenameContext;
 use SmartAssert\YamlFile\Validation\Validation;
 use SmartAssert\YamlFile\Validation\ValidationInterface;

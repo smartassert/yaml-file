@@ -7,7 +7,7 @@ namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\AccessorInterface;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\YamlFile;
 
 class ArrayCollectionTest extends TestCase
 {

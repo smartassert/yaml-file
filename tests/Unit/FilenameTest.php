@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\Tests\YamlFile\Unit\Model;
+namespace SmartAssert\Tests\YamlFile\Unit;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Filename;
+use SmartAssert\YamlFile\Filename;
 
 class FilenameTest extends TestCase
 {
