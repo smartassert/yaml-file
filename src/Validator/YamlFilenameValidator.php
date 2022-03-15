@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Validator;
 
 use SmartAssert\YamlFile\Model\Filename;
-use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\FilenameContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
 
 class YamlFilenameValidator
 {

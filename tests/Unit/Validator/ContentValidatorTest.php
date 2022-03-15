@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Validation\ContentContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\ContentContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
 use SmartAssert\YamlFile\Validator\ContentValidator;
 use Symfony\Component\Yaml\Parser;
 

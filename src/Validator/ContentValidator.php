@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Validator;
 
-use SmartAssert\YamlFile\Model\Validation\ContentContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\ContentContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 

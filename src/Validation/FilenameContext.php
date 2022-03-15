@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\YamlFile\Model\Validation;
+namespace SmartAssert\YamlFile\Validation;
 
 enum FilenameContext implements ContextInterface
 {

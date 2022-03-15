@@ -6,9 +6,9 @@ namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Model\Filename;
-use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\FilenameContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
 use SmartAssert\YamlFile\Validator\YamlFilenameValidator;
 
 class YamlFilenameValidatorTest extends TestCase
