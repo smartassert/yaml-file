@@ -30,7 +30,7 @@ class ArrayProvider implements AccessorInterface, ProviderInterface
         return $this->yamlFiles[$path] ?? null;
     }
 
-    public function provide(): \Generator
+    public function getYamlFiles(): \Generator
     {
         foreach ($this->yamlFiles as $yamlFile) {
             yield $yamlFile;

@@ -21,7 +21,7 @@ class Serializer
         $serializedFiles = [];
 
         /** @var YamlFile $yamlFile */
-        foreach ($provider->provide() as $yamlFile) {
+        foreach ($provider->getYamlFiles() as $yamlFile) {
             $serializedFiles[] = $this->serializeYamlFile($yamlFile);
         }
 

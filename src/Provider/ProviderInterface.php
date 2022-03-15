@@ -14,5 +14,5 @@ interface ProviderInterface
      *
      * @return \Generator<YamlFile>
      */
-    public function provide(): \Generator;
+    public function getYamlFiles(): \Generator;
 }
