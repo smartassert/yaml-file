@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Model\YamlFile;
-use SmartAssert\YamlFile\Provider\ArrayProvider;
-use SmartAssert\YamlFile\Provider\ProviderInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
@@ -32,6 +30,6 @@ class Deserializer
             }
         }
 
-        return new ArrayProvider($yamlFiles);
+        return new ArrayCollection($yamlFiles);
     }
 }

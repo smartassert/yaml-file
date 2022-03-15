@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\Tests\YamlFile\Unit\Provider;
+namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
+use SmartAssert\YamlFile\Collection\AccessorInterface;
+use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Model\YamlFile;
-use SmartAssert\YamlFile\Provider\AccessorInterface;
-use SmartAssert\YamlFile\Provider\ArrayProvider;
 
-class ArrayProviderTest extends TestCase
+class ArrayCollectionTest extends TestCase
 {
     public function testGetYamlFiles(): void
     {
@@ -19,7 +19,7 @@ class ArrayProviderTest extends TestCase
             YamlFile::create('file3.yaml', '- content3'),
         ];
 
-        $provider = new ArrayProvider($yamlFiles);
+        $provider = new ArrayCollection($yamlFiles);
 
         $providedYamlFiles = [];
 
@@ -50,22 +50,22 @@ class ArrayProviderTest extends TestCase
 
         return [
             'empty' => [
-                'accessor' => new ArrayProvider([]),
+                'accessor' => new ArrayCollection([]),
                 'path' => 'not relevant',
                 'expected' => null,
             ],
             'not found' => [
-                'accessor' => new ArrayProvider($yamlFiles),
+                'accessor' => new ArrayCollection($yamlFiles),
                 'path' => 'not-found.yaml',
                 'expected' => null,
             ],
             'find file1.yaml' => [
-                'accessor' => new ArrayProvider($yamlFiles),
+                'accessor' => new ArrayCollection($yamlFiles),
                 'path' => 'file1.yaml',
                 'expected' => $yamlFiles[0],
             ],
             'find file2.yaml' => [
-                'accessor' => new ArrayProvider($yamlFiles),
+                'accessor' => new ArrayCollection($yamlFiles),
                 'path' => 'directory/file2.yaml',
                 'expected' => $yamlFiles[1],
             ],

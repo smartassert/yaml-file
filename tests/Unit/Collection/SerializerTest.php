@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
+use SmartAssert\YamlFile\Collection\ArrayCollection;
+use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Collection\Serializer;
 use SmartAssert\YamlFile\Model\YamlFile;
-use SmartAssert\YamlFile\Provider\ArrayProvider;
-use SmartAssert\YamlFile\Provider\ProviderInterface;
 
 class SerializerTest extends TestCase
 {
@@ -57,19 +57,19 @@ class SerializerTest extends TestCase
 
         return [
             'empty' => [
-                'provider' => new ArrayProvider([]),
+                'provider' => new ArrayCollection([]),
                 'expected' => '',
             ],
             'single yaml file, single line' => [
-                'provider' => new ArrayProvider([$singleLineFile]),
+                'provider' => new ArrayCollection([$singleLineFile]),
                 'expected' => $expectedSingleLineFile,
             ],
             'single multiline yaml file' => [
-                'provider' => new ArrayProvider([$multiLineFile1]),
+                'provider' => new ArrayCollection([$multiLineFile1]),
                 'expected' => $expectedMultiLineFile1
             ],
             'multiple multiline yaml files' => [
-                'provider' => new ArrayProvider([$multiLineFile1, $multilineFile2]),
+                'provider' => new ArrayCollection([$multiLineFile1, $multilineFile2]),
                 'expected' => $expectedMultiLineFile1 . "\n\n" . $expectedMultiLineFile2,
             ],
         ];
