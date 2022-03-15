@@ -30,6 +30,6 @@ class Deserializer
             }
         }
 
-        return new ArrayProvider($yamlFiles);
+        return new ArrayCollection($yamlFiles);
     }
 }

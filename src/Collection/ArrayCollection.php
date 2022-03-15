@@ -6,7 +6,7 @@ namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Model\YamlFile;
 
-class ArrayProvider implements AccessorInterface, ProviderInterface
+class ArrayCollection implements AccessorInterface, ProviderInterface
 {
     /**
      * @var array<string, YamlFile>
