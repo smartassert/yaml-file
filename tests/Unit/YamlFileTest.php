@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\Tests\YamlFile\Unit\Model;
+namespace SmartAssert\Tests\YamlFile\Unit;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Filename;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\Filename;
+use SmartAssert\YamlFile\YamlFile;
 
 class YamlFileTest extends TestCase
 {

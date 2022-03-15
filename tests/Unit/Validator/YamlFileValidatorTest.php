@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Filename;
-use SmartAssert\YamlFile\Model\Validation\ContentContext;
-use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
-use SmartAssert\YamlFile\Model\Validation\YamlFileContext;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\Filename;
+use SmartAssert\YamlFile\Validation\ContentContext;
+use SmartAssert\YamlFile\Validation\FilenameContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\YamlFileContext;
 use SmartAssert\YamlFile\Validator\ContentValidator;
 use SmartAssert\YamlFile\Validator\YamlFilenameValidator;
 use SmartAssert\YamlFile\Validator\YamlFileValidator;
+use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Parser;
 
 class YamlFileValidatorTest extends TestCase

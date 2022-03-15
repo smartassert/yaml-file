@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Parser;
 
 class DeserializerTest extends TestCase

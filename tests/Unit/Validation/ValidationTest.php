@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\Tests\YamlFile\Unit\Model\Validation;
+namespace SmartAssert\Tests\YamlFile\Unit\Validation;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Model\Validation\ContentContext;
-use SmartAssert\YamlFile\Model\Validation\FilenameContext;
-use SmartAssert\YamlFile\Model\Validation\Validation;
-use SmartAssert\YamlFile\Model\Validation\ValidationInterface;
-use SmartAssert\YamlFile\Model\Validation\YamlFileContext;
+use SmartAssert\YamlFile\Validation\ContentContext;
+use SmartAssert\YamlFile\Validation\FilenameContext;
+use SmartAssert\YamlFile\Validation\Validation;
+use SmartAssert\YamlFile\Validation\ValidationInterface;
+use SmartAssert\YamlFile\Validation\YamlFileContext;
 
 class ValidationTest extends TestCase
 {

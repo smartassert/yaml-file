@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Exception\ProvisionException;
-use SmartAssert\YamlFile\Model\YamlFile;
+use SmartAssert\YamlFile\YamlFile;
 
 class Serializer
 {
