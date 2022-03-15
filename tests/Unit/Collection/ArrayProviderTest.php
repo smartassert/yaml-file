@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\Tests\YamlFile\Unit\Provider;
+namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
+use SmartAssert\YamlFile\Collection\AccessorInterface;
+use SmartAssert\YamlFile\Collection\ArrayProvider;
 use SmartAssert\YamlFile\Model\YamlFile;
-use SmartAssert\YamlFile\Provider\AccessorInterface;
-use SmartAssert\YamlFile\Provider\ArrayProvider;
 
 class ArrayProviderTest extends TestCase
 {

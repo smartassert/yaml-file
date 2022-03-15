@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\YamlFile\Provider;
+namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\Model\YamlFile;

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
+use SmartAssert\YamlFile\Collection\ArrayProvider;
 use SmartAssert\YamlFile\Collection\Deserializer;
+use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Model\YamlFile;
-use SmartAssert\YamlFile\Provider\ArrayProvider;
-use SmartAssert\YamlFile\Provider\ProviderInterface;
 use Symfony\Component\Yaml\Parser;
 
 class DeserializerTest extends TestCase
