@@ -11,7 +11,7 @@ use SmartAssert\YamlFile\Provider\ArrayProvider;
 
 class ArrayProviderTest extends TestCase
 {
-    public function testProvide(): void
+    public function testGetYamlFiles(): void
     {
         $yamlFiles = [
             YamlFile::create('file1.yaml', '- content1'),
@@ -23,7 +23,7 @@ class ArrayProviderTest extends TestCase
 
         $providedYamlFiles = [];
 
-        foreach ($provider->provide() as $yamlFile) {
+        foreach ($provider->getYamlFiles() as $yamlFile) {
             $providedYamlFiles[] = $yamlFile;
         }
 
