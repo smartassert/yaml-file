@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
-use Symfony\Component\Yaml\Parser;
+use webignition\YamlDocumentSetParser\Parser;
 
 class DeserializerTest extends TestCase
 {
@@ -19,7 +20,9 @@ class DeserializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->deserializer = new Deserializer(new Parser());
+        $this->deserializer = new Deserializer(
+            new Parser()
+        );
     }
 
     /**
@@ -35,26 +38,19 @@ class DeserializerTest extends TestCase
      */
     public function deserializeDataProvider(): array
     {
-        $singleLineFile = YamlFile::create('filename1.yaml', '- file1line1');
-        $multiLineFile1 = YamlFile::create('filename2.yaml', '- file2line1' . "\n" . '- file2line2');
-        $multilineFile2 = YamlFile::create('filename3.yaml', '- file3line1' . "\n" . '- file3line2');
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml'];
 
-        $serializedSingleLineFile = <<< 'EOF'
-        "filename1.yaml": |
-          - file1line1
-        EOF;
+        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
 
-        $serializedMultiLineFile1 = <<< 'EOF'
-        "filename2.yaml": |
-          - file2line1
-          - file2line2
-        EOF;
+        $yamlFiles = [];
+        foreach ($filenames as $index => $filename) {
+            $yamlFiles[] = YamlFile::create($filename, $content[$index]);
+        }
 
-        $serializedMultiLineFile2 = <<< 'EOF'
-        "filename3.yaml": |
-          - file3line1
-          - file3line2
-        EOF;
+        $serializedFiles = [];
+        foreach ($yamlFiles as $yamlFile) {
+            $serializedFiles[] = (string) new SerializedYamlFile($yamlFile);
+        }
 
         return [
             'empty' => [
@@ -62,16 +58,34 @@ class DeserializerTest extends TestCase
                 'expected' => new ArrayCollection([]),
             ],
             'single yaml file, single line' => [
-                'serialized' => $serializedSingleLineFile,
-                'expected' => new ArrayCollection([$singleLineFile]),
+                'serialized' => <<< EOF
+                ---
+                {$serializedFiles[0]}
+                ...
+                EOF,
+                'expected' => new ArrayCollection([$yamlFiles[0]]),
             ],
             'single multiline yaml file' => [
-                'serialized' => $serializedMultiLineFile1,
-                'expected' => new ArrayCollection([$multiLineFile1]),
+                'serialized' => <<< EOF
+                ---
+                {$serializedFiles[1]}
+                ...
+                EOF,
+                'expected' => new ArrayCollection([$yamlFiles[1]]),
             ],
-            'multiple multiline yaml files' => [
-                'serialized' => $serializedMultiLineFile1 . "\n\n" . $serializedMultiLineFile2,
-                'expected' => new ArrayCollection([$multiLineFile1, $multilineFile2]),
+            'multiple yaml files' => [
+                'serialized' => <<< EOF
+                ---
+                {$serializedFiles[0]}
+                ...
+                ---
+                {$serializedFiles[1]}
+                ...
+                ---
+                {$serializedFiles[2]}
+                ...
+                EOF,
+                'expected' => new ArrayCollection($yamlFiles),
             ],
         ];
     }
