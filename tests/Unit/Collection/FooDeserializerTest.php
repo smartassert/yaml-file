@@ -59,7 +59,7 @@ class FooDeserializerTest extends TestCase
             'single yaml file, single line' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
+                "path": "{$filenames[0]}"
                 "content": |
                   {$encodedContent[0]}
                 ...
@@ -69,7 +69,7 @@ class FooDeserializerTest extends TestCase
             'single multiline yaml file' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[1]}"
+                "path": "{$filenames[1]}"
                 "content": |
                   {$encodedContent[1]}
                 ...
@@ -79,17 +79,17 @@ class FooDeserializerTest extends TestCase
             'multiple yaml files' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
+                "path": "{$filenames[0]}"
                 "content": |
                   {$encodedContent[0]}
                 ...
                 ---
-                "filename": "{$filenames[1]}"
+                "path": "{$filenames[1]}"
                 "content": |
                   {$encodedContent[1]}
                 ...
                 ---
-                "filename": "{$filenames[2]}"
+                "path": "{$filenames[2]}"
                 "content": |
                   {$encodedContent[2]}
                 ...

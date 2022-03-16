@@ -57,7 +57,7 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
+                "path": "{$filenames[0]}"
                 "content": |
                   {$encodedContent[0]}
                 ...
@@ -67,7 +67,7 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
-                "filename": "{$filenames[1]}"
+                "path": "{$filenames[1]}"
                 "content": |
                   {$encodedContent[1]}
                 ...
@@ -77,17 +77,17 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection($yamlFiles),
                 'expected' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
+                "path": "{$filenames[0]}"
                 "content": |
                   {$encodedContent[0]}
                 ...
                 ---
-                "filename": "{$filenames[1]}"
+                "path": "{$filenames[1]}"
                 "content": |
                   {$encodedContent[1]}
                 ...
                 ---
-                "filename": "{$filenames[2]}"
+                "path": "{$filenames[2]}"
                 "content": |
                   {$encodedContent[2]}
                 ...
