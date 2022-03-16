@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Collection;
 
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
+use webignition\YamlDocumentSetParser\Parser;
 
 class Deserializer
 {
     public function __construct(
-        private Parser $yamlParser,
+        private Parser $documentSetParser,
     ) {
     }
 
@@ -22,11 +23,16 @@ class Deserializer
     {
         $yamlFiles = [];
 
-        $parsed = $this->yamlParser->parse($content);
+        $documents = $this->documentSetParser->parse($content);
 
-        if (is_array($parsed)) {
-            foreach ($parsed as $path => $content) {
-                $yamlFiles[] = YamlFile::create($path, rtrim($content));
+        foreach ($documents as $document) {
+            if (is_array($document)) {
+                $filename = $document[SerializedYamlFile::KEY_PATH] ?? '';
+                $content = $document[SerializedYamlFile::KEY_CONTENT] ?? '';
+
+                if ('' !== $filename && '' !== $content) {
+                    $yamlFiles[] = YamlFile::create($filename, $content);
+                }
             }
         }
 
