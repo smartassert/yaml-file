@@ -9,7 +9,6 @@ use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\FooSerializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\YamlFile;
-use Symfony\Component\Yaml\Dumper;
 
 class FooSerializerTest extends TestCase
 {
@@ -19,9 +18,7 @@ class FooSerializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->serializer = new FooSerializer(
-            new Dumper(),
-        );
+        $this->serializer = new FooSerializer();
     }
 
     /**
@@ -41,9 +38,9 @@ class FooSerializerTest extends TestCase
 
         $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
 
-        $hashes = [];
+        $encodedContent = [];
         foreach ($content as $item) {
-            $hashes[] = md5($item);
+            $encodedContent[] = str_replace("\n", "\n  ", $item);
         }
 
         $yamlFiles = [];
@@ -60,11 +57,9 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
-                metadata:
-                    {$filenames[0]}: {$hashes[0]}
-                ...
-                ---
-                {$content[0]}
+                "filename": "{$filenames[0]}"
+                "content": |
+                  {$encodedContent[0]}
                 ...
                 EOF,
             ],
@@ -72,11 +67,9 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
-                metadata:
-                    {$filenames[1]}: {$hashes[1]}
-                ...
-                ---
-                {$content[1]}
+                "filename": "{$filenames[1]}"
+                "content": |
+                  {$encodedContent[1]}
                 ...
                 EOF
             ],
@@ -84,19 +77,19 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection($yamlFiles),
                 'expected' => <<< EOF
                 ---
-                metadata:
-                    {$filenames[0]}: {$hashes[0]}
-                    {$filenames[1]}: {$hashes[1]}
-                    {$filenames[2]}: {$hashes[2]}
+                "filename": "{$filenames[0]}"
+                "content": |
+                  {$encodedContent[0]}
                 ...
                 ---
-                {$content[0]}
+                "filename": "{$filenames[1]}"
+                "content": |
+                  {$encodedContent[1]}
                 ...
                 ---
-                {$content[1]}
-                ...
-                ---
-                {$content[2]}
+                "filename": "{$filenames[2]}"
+                "content": |
+                  {$encodedContent[2]}
                 ...
                 EOF
             ],
