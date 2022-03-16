@@ -5,39 +5,28 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Exception\ProvisionException;
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
 
 class Serializer
 {
-    private const PAYLOAD_INDENT = '  ';
-    private const TEMPLATE = '"%s": |' . "\n" . self::PAYLOAD_INDENT . '%s';
+    private const DOCUMENT_TEMPLATE = '---' . "\n" . '%s' . "\n" . '...';
 
     /**
      * @throws ProvisionException
      */
     public function serialize(ProviderInterface $provider): string
     {
-        $serializedFiles = [];
+        $documents = [];
 
         /** @var YamlFile $yamlFile */
         foreach ($provider->getYamlFiles() as $yamlFile) {
-            $serializedFiles[] = $this->serializeYamlFile($yamlFile);
+            $documents[] = sprintf(
+                self::DOCUMENT_TEMPLATE,
+                (string) new SerializedYamlFile($yamlFile)
+            );
         }
 
-        return implode("\n\n", $serializedFiles);
-    }
-
-    private function serializeYamlFile(YamlFile $yamlFile): string
-    {
-        return sprintf(
-            self::TEMPLATE,
-            addcslashes((string) $yamlFile->name, '"'),
-            $this->createFileContentPayload($yamlFile->content)
-        );
-    }
-
-    private function createFileContentPayload(string $content): string
-    {
-        return str_replace("\n", "\n" . self::PAYLOAD_INDENT, $content);
+        return implode("\n", $documents);
     }
 }
