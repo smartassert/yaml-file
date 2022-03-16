@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Exception\ProvisionException;
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
 
 class FooSerializer
@@ -22,23 +23,10 @@ class FooSerializer
         foreach ($provider->getYamlFiles() as $yamlFile) {
             $documents[] = sprintf(
                 self::DOCUMENT_TEMPLATE,
-                $this->createDocumentContent((string) $yamlFile->name, $yamlFile->content)
+                (string) new SerializedYamlFile($yamlFile)
             );
         }
 
         return implode("\n", $documents);
-    }
-
-    private function createDocumentContent(string $filename, string $content): string
-    {
-        return sprintf(
-            <<< 'EOF'
-            "filename": "%s"
-            "content": |
-              %s
-            EOF,
-            $filename,
-            str_replace("\n", "\n  ", $content)
-        );
     }
 }

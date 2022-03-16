@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\FooDeserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
 use webignition\YamlDocumentSetParser\Parser;
 
@@ -41,14 +42,14 @@ class FooDeserializerTest extends TestCase
 
         $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
 
-        $encodedContent = [];
-        foreach ($content as $item) {
-            $encodedContent[] = str_replace("\n", "\n  ", $item);
-        }
-
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
             $yamlFiles[] = YamlFile::create($filename, $content[$index]);
+        }
+
+        $serializedFiles = [];
+        foreach ($yamlFiles as $yamlFile) {
+            $serializedFiles[] = (string) new SerializedYamlFile($yamlFile);
         }
 
         return [
@@ -59,9 +60,7 @@ class FooDeserializerTest extends TestCase
             'single yaml file, single line' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
-                "content": |
-                  {$encodedContent[0]}
+                {$serializedFiles[0]}
                 ...
                 EOF,
                 'expected' => new ArrayCollection([$yamlFiles[0]]),
@@ -69,9 +68,7 @@ class FooDeserializerTest extends TestCase
             'single multiline yaml file' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[1]}"
-                "content": |
-                  {$encodedContent[1]}
+                {$serializedFiles[1]}
                 ...
                 EOF,
                 'expected' => new ArrayCollection([$yamlFiles[1]]),
@@ -79,19 +76,13 @@ class FooDeserializerTest extends TestCase
             'multiple yaml files' => [
                 'serialized' => <<< EOF
                 ---
-                "filename": "{$filenames[0]}"
-                "content": |
-                  {$encodedContent[0]}
+                {$serializedFiles[0]}
                 ...
                 ---
-                "filename": "{$filenames[1]}"
-                "content": |
-                  {$encodedContent[1]}
+                {$serializedFiles[1]}
                 ...
                 ---
-                "filename": "{$filenames[2]}"
-                "content": |
-                  {$encodedContent[2]}
+                {$serializedFiles[2]}
                 ...
                 EOF,
                 'expected' => new ArrayCollection($yamlFiles),
