@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\FooSerializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
+use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
 
 class FooSerializerTest extends TestCase
@@ -38,14 +39,14 @@ class FooSerializerTest extends TestCase
 
         $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
 
-        $encodedContent = [];
-        foreach ($content as $item) {
-            $encodedContent[] = str_replace("\n", "\n  ", $item);
-        }
-
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
             $yamlFiles[] = YamlFile::create($filename, $content[$index]);
+        }
+
+        $serializedFiles = [];
+        foreach ($yamlFiles as $yamlFile) {
+            $serializedFiles[] = (string) new SerializedYamlFile($yamlFile);
         }
 
         return [
@@ -57,9 +58,7 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
-                "path": "{$filenames[0]}"
-                "content": |
-                  {$encodedContent[0]}
+                {$serializedFiles[0]}
                 ...
                 EOF,
             ],
@@ -67,9 +66,7 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
-                "path": "{$filenames[1]}"
-                "content": |
-                  {$encodedContent[1]}
+                {$serializedFiles[1]}
                 ...
                 EOF
             ],
@@ -77,19 +74,13 @@ class FooSerializerTest extends TestCase
                 'provider' => new ArrayCollection($yamlFiles),
                 'expected' => <<< EOF
                 ---
-                "path": "{$filenames[0]}"
-                "content": |
-                  {$encodedContent[0]}
+                {$serializedFiles[0]}
                 ...
                 ---
-                "path": "{$filenames[1]}"
-                "content": |
-                  {$encodedContent[1]}
+                {$serializedFiles[1]}
                 ...
                 ---
-                "path": "{$filenames[2]}"
-                "content": |
-                  {$encodedContent[2]}
+                {$serializedFiles[2]}
                 ...
                 EOF
             ],
