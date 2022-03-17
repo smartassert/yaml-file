@@ -30,7 +30,7 @@ class Deserializer
                 $filename = $document[SerializedYamlFile::KEY_PATH] ?? '';
                 $content = $document[SerializedYamlFile::KEY_CONTENT] ?? '';
 
-                if ('' !== $filename && '' !== $content) {
+                if ('' !== $filename) {
                     $yamlFiles[] = YamlFile::create($filename, $content);
                 }
             }

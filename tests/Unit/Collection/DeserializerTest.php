@@ -38,9 +38,9 @@ class DeserializerTest extends TestCase
      */
     public function deserializeDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
 
-        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
+        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2', ''];
 
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
@@ -53,9 +53,17 @@ class DeserializerTest extends TestCase
         }
 
         return [
-            'empty' => [
+            'empty content' => [
                 'serialized' => '',
                 'expected' => new ArrayCollection([]),
+            ],
+            'single empty yaml file' => [
+                'serialized' => <<< EOF
+                ---
+                {$serializedFiles[3]}
+                ...
+                EOF,
+                'expected' => new ArrayCollection([$yamlFiles[3]]),
             ],
             'single yaml file, single line' => [
                 'serialized' => <<< EOF
@@ -85,7 +93,7 @@ class DeserializerTest extends TestCase
                 {$serializedFiles[2]}
                 ...
                 EOF,
-                'expected' => new ArrayCollection($yamlFiles),
+                'expected' => new ArrayCollection([$yamlFiles[0], $yamlFiles[1], $yamlFiles[2]]),
             ],
         ];
     }
