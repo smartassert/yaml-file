@@ -10,7 +10,8 @@ use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\SerializedYamlFile;
 use SmartAssert\YamlFile\YamlFile;
-use webignition\YamlDocumentSetParser\Parser;
+use Symfony\Component\Yaml\Parser as YamlParser;
+use webignition\YamlDocumentSetParser\Parser as DocumentSetParser;
 
 class DeserializerTest extends TestCase
 {
@@ -20,9 +21,7 @@ class DeserializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->deserializer = new Deserializer(
-            new Parser()
-        );
+        $this->deserializer = new Deserializer(new DocumentSetParser(), new YamlParser());
     }
 
     /**
