@@ -68,9 +68,9 @@ class DeserializerTest extends TestCase
     }
 
     /**
-     * @dataProvider deserializeDataProvider
+     * @dataProvider deserializeSuccessDataProvider
      */
-    public function testDeserialize(string $serialized, ProviderInterface $expected): void
+    public function testDeserializeSuccess(string $serialized, ProviderInterface $expected): void
     {
         self::assertEquals($expected, $this->deserializer->deserialize($serialized));
     }
@@ -78,11 +78,16 @@ class DeserializerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function deserializeDataProvider(): array
+    public function deserializeSuccessDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
 
-        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
+        $content = [
+            '- file1line1',
+            '- file2line1' . "\n" . '- file2line2',
+            '- file3line1' . "\n" . '- file3line2',
+            '', // intentionally empty
+        ];
 
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
@@ -127,6 +132,7 @@ class DeserializerTest extends TestCase
                 {$hashes[0]}: {$filenames[0]}
                 {$hashes[1]}: {$filenames[1]}
                 {$hashes[2]}: {$filenames[2]}
+                {$hashes[3]}: {$filenames[3]}
                 ...
                 ---
                 {$content[0]}
@@ -136,6 +142,8 @@ class DeserializerTest extends TestCase
                 ...
                 ---
                 {$content[2]}
+                ...
+                ---
                 ...
                 EOF,
                 'expected' => new ArrayCollection($yamlFiles),
