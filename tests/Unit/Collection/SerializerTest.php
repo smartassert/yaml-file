@@ -40,9 +40,14 @@ class SerializerTest extends TestCase
      */
     public function serializeDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
 
-        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
+        $content = [
+            '- file1line1',
+            '- file2line1' . "\n" . '- file2line2',
+            '- file3line1' . "\n" . '- file3line2',
+            '', // intentionally empty
+        ];
 
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
@@ -59,7 +64,7 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([]),
                 'expected' => '',
             ],
-            'single yaml file, single line' => [
+            'single non-empty yaml file, single line' => [
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
@@ -70,7 +75,17 @@ class SerializerTest extends TestCase
                 ...
                 EOF,
             ],
-            'single multiline yaml file' => [
+            'single empty yaml file' => [
+                'provider' => new ArrayCollection([$yamlFiles[3]]),
+                'expected' => <<< EOF
+                ---
+                {$hashes[3]}: {$filenames[3]}
+                ...
+                ---
+                ...
+                EOF,
+            ],
+            'single non-empty multiline yaml file' => [
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
@@ -88,6 +103,7 @@ class SerializerTest extends TestCase
                 {$hashes[0]}: {$filenames[0]}
                 {$hashes[1]}: {$filenames[1]}
                 {$hashes[2]}: {$filenames[2]}
+                {$hashes[3]}: {$filenames[3]}
                 ...
                 ---
                 {$content[0]}
@@ -97,6 +113,8 @@ class SerializerTest extends TestCase
                 ...
                 ---
                 {$content[2]}
+                ...
+                ---
                 ...
                 EOF,
             ],
