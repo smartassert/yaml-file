@@ -8,7 +8,10 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
-use SmartAssert\YamlFile\SerializedYamlFile;
+use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
+use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidPathException;
+use SmartAssert\YamlFile\FileHashes;
+use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;
 use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use webignition\YamlDocumentSetParser\Parser as DocumentSetParser;
@@ -21,7 +24,47 @@ class DeserializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->deserializer = new Deserializer(new DocumentSetParser(), new YamlParser());
+        $this->deserializer = new Deserializer(
+            new DocumentSetParser(),
+            new FileHashesDeserializer(
+                new YamlParser()
+            )
+        );
+    }
+
+    public function testDeserializeInvalidFileHashes(): void
+    {
+        $content = <<< 'EOF'
+            ---
+            hash1: true
+            ...
+            ---
+            content for path1.yaml
+            ...
+            EOF;
+
+        $this->expectExceptionObject(new InvalidPathException($content, 'hash1', 0));
+
+        $this->deserializer->deserialize($content);
+    }
+
+    public function testDeserializeFilePathNotFound(): void
+    {
+        $content = <<< 'EOF'
+            ---
+            hash1: path1hash
+            ...
+            ---
+            content for path1.yaml
+            ...
+            EOF;
+
+        $this->expectExceptionObject(new FilePathNotFoundException(
+            'e1810158fa43e20800abda5f82bb7baa',
+            (new FileHashes())
+        ));
+
+        $this->deserializer->deserialize($content);
     }
 
     /**
@@ -37,37 +80,32 @@ class DeserializerTest extends TestCase
      */
     public function deserializeDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml'];
 
-        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2', ''];
+        $content = ['- file1line1', '- file2line1' . "\n" . '- file2line2', '- file3line1' . "\n" . '- file3line2'];
 
         $yamlFiles = [];
         foreach ($filenames as $index => $filename) {
             $yamlFiles[] = YamlFile::create($filename, $content[$index]);
         }
 
-        $serializedFiles = [];
-        foreach ($yamlFiles as $yamlFile) {
-            $serializedFiles[] = (string) new SerializedYamlFile($yamlFile);
+        $hashes = [];
+        foreach ($content as $item) {
+            $hashes[] = md5($item);
         }
 
         return [
-            'empty content' => [
+            'empty' => [
                 'serialized' => '',
                 'expected' => new ArrayCollection([]),
-            ],
-            'single empty yaml file' => [
-                'serialized' => <<< EOF
-                ---
-                {$serializedFiles[3]}
-                ...
-                EOF,
-                'expected' => new ArrayCollection([$yamlFiles[3]]),
             ],
             'single yaml file, single line' => [
                 'serialized' => <<< EOF
                 ---
-                {$serializedFiles[0]}
+                {$hashes[0]}: {$filenames[0]}
+                ...
+                ---
+                {$content[0]}
                 ...
                 EOF,
                 'expected' => new ArrayCollection([$yamlFiles[0]]),
@@ -75,7 +113,10 @@ class DeserializerTest extends TestCase
             'single multiline yaml file' => [
                 'serialized' => <<< EOF
                 ---
-                {$serializedFiles[1]}
+                {$hashes[1]}: {$filenames[1]}
+                ...
+                ---
+                {$content[1]}
                 ...
                 EOF,
                 'expected' => new ArrayCollection([$yamlFiles[1]]),
@@ -83,16 +124,21 @@ class DeserializerTest extends TestCase
             'multiple yaml files' => [
                 'serialized' => <<< EOF
                 ---
-                {$serializedFiles[0]}
+                {$hashes[0]}: {$filenames[0]}
+                {$hashes[1]}: {$filenames[1]}
+                {$hashes[2]}: {$filenames[2]}
                 ...
                 ---
-                {$serializedFiles[1]}
+                {$content[0]}
                 ...
                 ---
-                {$serializedFiles[2]}
+                {$content[1]}
+                ...
+                ---
+                {$content[2]}
                 ...
                 EOF,
-                'expected' => new ArrayCollection([$yamlFiles[0], $yamlFiles[1], $yamlFiles[2]]),
+                'expected' => new ArrayCollection($yamlFiles),
             ],
         ];
     }

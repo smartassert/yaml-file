@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Collection\Serializer;
-use SmartAssert\YamlFile\SerializedYamlFile;
+use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
 use SmartAssert\YamlFile\YamlFile;
+use Symfony\Component\Yaml\Dumper;
 
 class SerializerTest extends TestCase
 {
@@ -19,7 +20,11 @@ class SerializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->serializer = new Serializer();
+        $this->serializer = new Serializer(
+            new FileHashesSerializer(
+                new Dumper()
+            )
+        );
     }
 
     /**
@@ -44,9 +49,9 @@ class SerializerTest extends TestCase
             $yamlFiles[] = YamlFile::create($filename, $content[$index]);
         }
 
-        $serializedFiles = [];
-        foreach ($yamlFiles as $yamlFile) {
-            $serializedFiles[] = (string) new SerializedYamlFile($yamlFile);
+        $hashes = [];
+        foreach ($content as $item) {
+            $hashes[] = md5($item);
         }
 
         return [
@@ -58,7 +63,10 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
-                {$serializedFiles[0]}
+                {$hashes[0]}: {$filenames[0]}
+                ...
+                ---
+                {$content[0]}
                 ...
                 EOF,
             ],
@@ -66,23 +74,31 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
-                {$serializedFiles[1]}
+                {$hashes[1]}: {$filenames[1]}
                 ...
-                EOF
+                ---
+                {$content[1]}
+                ...
+                EOF,
             ],
             'multiple yaml files' => [
                 'provider' => new ArrayCollection($yamlFiles),
                 'expected' => <<< EOF
                 ---
-                {$serializedFiles[0]}
+                {$hashes[0]}: {$filenames[0]}
+                {$hashes[1]}: {$filenames[1]}
+                {$hashes[2]}: {$filenames[2]}
                 ...
                 ---
-                {$serializedFiles[1]}
+                {$content[0]}
                 ...
                 ---
-                {$serializedFiles[2]}
+                {$content[1]}
                 ...
-                EOF
+                ---
+                {$content[2]}
+                ...
+                EOF,
             ],
         ];
     }
