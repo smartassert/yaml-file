@@ -4,39 +4,43 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Collection;
 
-use SmartAssert\YamlFile\SerializedYamlFile;
+use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
+use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
+use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;
 use SmartAssert\YamlFile\YamlFile;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser as YamlParser;
 use webignition\YamlDocumentSetParser\Parser as DocumentSetParser;
 
 class Deserializer
 {
     public function __construct(
         private DocumentSetParser $documentSetParser,
-        private YamlParser $yamlParser,
+        private FileHashesDeserializer $fileHashesDeserializer,
     ) {
     }
 
     /**
-     * @throws ParseException
+     * @throws ExceptionInterface
+     * @throws FilePathNotFoundException
      */
     public function deserialize(string $content): ProviderInterface
     {
         $yamlFiles = [];
         $documents = $this->documentSetParser->parse($content);
 
+        $fileHashesDocument = array_shift($documents);
+        $fileHashesDocument = is_string($fileHashesDocument) ? $fileHashesDocument : '';
+
+        $fileHashes = $this->fileHashesDeserializer->deserialize($fileHashesDocument);
+
         foreach ($documents as $document) {
-            $data = $this->yamlParser->parse($document);
+            $documentHash = md5($document);
+            $filename = $fileHashes->getFilename($documentHash);
 
-            if (is_array($data)) {
-                $filename = $data[SerializedYamlFile::KEY_PATH] ?? '';
-                $content = $data[SerializedYamlFile::KEY_CONTENT] ?? '';
-
-                if ('' !== $filename) {
-                    $yamlFiles[] = YamlFile::create($filename, $content);
-                }
+            if (null === $filename) {
+                throw new FilePathNotFoundException($documentHash, $fileHashes);
             }
+
+            $yamlFiles[] = YamlFile::create($filename, $document);
         }
 
         return new ArrayCollection($yamlFiles);
