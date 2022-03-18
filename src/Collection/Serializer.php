@@ -11,7 +11,8 @@ use SmartAssert\YamlFile\YamlFile;
 
 class Serializer
 {
-    private const DOCUMENT_TEMPLATE = '---' . "\n" . '%s' . "\n" . '...';
+    private const DOCUMENT_START = '---';
+    private const DOCUMENT_END = '...';
 
     public function __construct(
         private FileHashesSerializer $fileHashesSerializer,
@@ -29,21 +30,25 @@ class Serializer
         /** @var YamlFile $yamlFile */
         foreach ($provider->getYamlFiles() as $yamlFile) {
             $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
-
-            $documents[] = sprintf(
-                self::DOCUMENT_TEMPLATE,
-                $yamlFile->content
-            );
+            $documents[] = $this->createDocument($yamlFile->content);
         }
 
         $fileHashItems = $fileHashes->getItems();
         if ([] !== $fileHashItems) {
-            array_unshift($documents, sprintf(
-                self::DOCUMENT_TEMPLATE,
-                $this->fileHashesSerializer->serialize($fileHashes)
-            ));
+            array_unshift($documents, $this->createDocument($this->fileHashesSerializer->serialize($fileHashes)));
         }
 
         return implode("\n", $documents);
+    }
+
+    private function createDocument(string $content): string
+    {
+        $documentContent = self::DOCUMENT_START . "\n";
+
+        if ('' !== $content) {
+            $documentContent .= $content . "\n";
+        }
+
+        return $documentContent . self::DOCUMENT_END;
     }
 }
