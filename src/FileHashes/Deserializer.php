@@ -9,6 +9,7 @@ use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidHashException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidPathException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\NotArrayException;
+use SmartAssert\YamlFile\Exception\FileHashesDeserializer\PathCollectionNotArrayException;
 use SmartAssert\YamlFile\FileHashes;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -42,16 +43,23 @@ class Deserializer
         }
 
         $index = 0;
-        foreach ($data as $hash => $path) {
+        foreach ($data as $hash => $paths) {
             if (!is_string($hash)) {
                 throw new InvalidHashException($content, $index);
             }
 
-            if (!is_string($path)) {
-                throw new InvalidPathException($content, $hash, $index);
+            if (!is_array($paths)) {
+                throw new PathCollectionNotArrayException($content, $hash, $paths);
             }
 
-            $fileHashes->add($path, $hash);
+            foreach ($paths as $path) {
+                if (!is_string($path)) {
+                    throw new InvalidPathException($content, $hash, $index);
+                }
+
+                $fileHashes->add($path, $hash);
+            }
+
             ++$index;
         }
 
