@@ -40,12 +40,13 @@ class SerializerTest extends TestCase
      */
     public function serializeDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml', 'duplicate-empty.yaml'];
 
         $content = [
             '- file1line1',
             '- file2line1' . "\n" . '- file2line2',
             '- file3line1' . "\n" . '- file3line2',
+            '', // intentionally empty
             '', // intentionally empty
         ];
 
@@ -68,7 +69,8 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[0]]),
                 'expected' => <<< EOF
                 ---
-                {$hashes[0]}: {$filenames[0]}
+                {$hashes[0]}:
+                    - {$filenames[0]}
                 ...
                 ---
                 {$content[0]}
@@ -79,7 +81,8 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[3]]),
                 'expected' => <<< EOF
                 ---
-                {$hashes[3]}: {$filenames[3]}
+                {$hashes[3]}:
+                    - {$filenames[3]}
                 ...
                 ---
                 ...
@@ -89,21 +92,27 @@ class SerializerTest extends TestCase
                 'provider' => new ArrayCollection([$yamlFiles[1]]),
                 'expected' => <<< EOF
                 ---
-                {$hashes[1]}: {$filenames[1]}
+                {$hashes[1]}:
+                    - {$filenames[1]}
                 ...
                 ---
                 {$content[1]}
                 ...
                 EOF,
             ],
-            'multiple yaml files' => [
+            'all' => [
                 'provider' => new ArrayCollection($yamlFiles),
                 'expected' => <<< EOF
                 ---
-                {$hashes[0]}: {$filenames[0]}
-                {$hashes[1]}: {$filenames[1]}
-                {$hashes[2]}: {$filenames[2]}
-                {$hashes[3]}: {$filenames[3]}
+                {$hashes[0]}:
+                    - {$filenames[0]}
+                {$hashes[1]}:
+                    - {$filenames[1]}
+                {$hashes[2]}:
+                    - {$filenames[2]}
+                {$hashes[3]}:
+                    - {$filenames[3]}
+                    - {$filenames[4]}
                 ...
                 ---
                 {$content[0]}
@@ -113,6 +122,8 @@ class SerializerTest extends TestCase
                 ...
                 ---
                 {$content[2]}
+                ...
+                ---
                 ...
                 ---
                 ...

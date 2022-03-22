@@ -32,11 +32,12 @@ class DeserializerTest extends TestCase
         );
     }
 
-    public function testDeserializeInvalidFileHashes(): void
+    public function testDeserializeFileHashesException(): void
     {
         $content = <<< 'EOF'
             ---
-            hash1: true
+            hash1:
+                - true
             ...
             ---
             content for path1.yaml
@@ -52,7 +53,8 @@ class DeserializerTest extends TestCase
     {
         $content = <<< 'EOF'
             ---
-            hash1: path1hash
+            hash1:
+                - path1hash
             ...
             ---
             content for path1.yaml
@@ -80,12 +82,13 @@ class DeserializerTest extends TestCase
      */
     public function deserializeSuccessDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml'];
+        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml', 'duplicate-empty.yaml'];
 
         $content = [
             '- file1line1',
             '- file2line1' . "\n" . '- file2line2',
             '- file3line1' . "\n" . '- file3line2',
+            '', // intentionally empty
             '', // intentionally empty
         ];
 
@@ -107,7 +110,8 @@ class DeserializerTest extends TestCase
             'single yaml file, single line' => [
                 'serialized' => <<< EOF
                 ---
-                {$hashes[0]}: {$filenames[0]}
+                {$hashes[0]}:
+                     - {$filenames[0]}
                 ...
                 ---
                 {$content[0]}
@@ -118,7 +122,8 @@ class DeserializerTest extends TestCase
             'single multiline yaml file' => [
                 'serialized' => <<< EOF
                 ---
-                {$hashes[1]}: {$filenames[1]}
+                {$hashes[1]}:
+                    - {$filenames[1]}
                 ...
                 ---
                 {$content[1]}
@@ -126,13 +131,18 @@ class DeserializerTest extends TestCase
                 EOF,
                 'expected' => new ArrayCollection([$yamlFiles[1]]),
             ],
-            'multiple yaml files' => [
+            'all' => [
                 'serialized' => <<< EOF
                 ---
-                {$hashes[0]}: {$filenames[0]}
-                {$hashes[1]}: {$filenames[1]}
-                {$hashes[2]}: {$filenames[2]}
-                {$hashes[3]}: {$filenames[3]}
+                {$hashes[0]}:
+                    - {$filenames[0]}
+                {$hashes[1]}:
+                    - {$filenames[1]}
+                {$hashes[2]}:
+                    - {$filenames[2]}
+                {$hashes[3]}:
+                    - {$filenames[3]}
+                    - {$filenames[4]}
                 ...
                 ---
                 {$content[0]}
@@ -145,6 +155,8 @@ class DeserializerTest extends TestCase
                 ...
                 ---
                 ...
+                ---
+                ...                
                 EOF,
                 'expected' => new ArrayCollection($yamlFiles),
             ],
