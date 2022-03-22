@@ -28,9 +28,9 @@ class SerializerTest extends TestCase
     }
 
     /**
-     * @dataProvider serializeDataProvider
+     * @dataProvider serializeSuccessDataProvider
      */
-    public function testSerialize(ProviderInterface $provider, string $expected): void
+    public function testSerializeSuccess(ProviderInterface $provider, string $expected): void
     {
         self::assertSame($expected, $this->serializer->serialize($provider));
     }
@@ -38,9 +38,16 @@ class SerializerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function serializeDataProvider(): array
+    public function serializeSuccessDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml', 'duplicate-empty.yaml'];
+        $filenames = [
+            'file1.yaml',
+            'file2.yaml',
+            'file3.yaml',
+            'empty.yaml',
+            'duplicate-empty.yaml',
+            'duplicate-file1.yaml',
+        ];
 
         $content = [
             '- file1line1',
@@ -48,6 +55,7 @@ class SerializerTest extends TestCase
             '- file3line1' . "\n" . '- file3line2',
             '', // intentionally empty
             '', // intentionally empty
+            '- file1line1',
         ];
 
         $yamlFiles = [];
@@ -106,6 +114,7 @@ class SerializerTest extends TestCase
                 ---
                 {$hashes[0]}:
                     - {$filenames[0]}
+                    - {$filenames[5]}
                 {$hashes[1]}:
                     - {$filenames[1]}
                 {$hashes[2]}:
@@ -122,8 +131,6 @@ class SerializerTest extends TestCase
                 ...
                 ---
                 {$content[2]}
-                ...
-                ---
                 ...
                 ---
                 ...

@@ -82,7 +82,14 @@ class DeserializerTest extends TestCase
      */
     public function deserializeSuccessDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml', 'duplicate-empty.yaml'];
+        $filenames = [
+            'file1.yaml',
+            'file2.yaml',
+            'file3.yaml',
+            'empty.yaml',
+            'duplicate-empty.yaml',
+            'duplicate-file1.yaml',
+        ];
 
         $content = [
             '- file1line1',
@@ -90,6 +97,7 @@ class DeserializerTest extends TestCase
             '- file3line1' . "\n" . '- file3line2',
             '', // intentionally empty
             '', // intentionally empty
+            '- file1line1',
         ];
 
         $yamlFiles = [];
@@ -136,6 +144,7 @@ class DeserializerTest extends TestCase
                 ---
                 {$hashes[0]}:
                     - {$filenames[0]}
+                    - {$filenames[5]}
                 {$hashes[1]}:
                     - {$filenames[1]}
                 {$hashes[2]}:
@@ -155,8 +164,6 @@ class DeserializerTest extends TestCase
                 ...
                 ---
                 ...
-                ---
-                ...                
                 EOF,
                 'expected' => new ArrayCollection($yamlFiles),
             ],
