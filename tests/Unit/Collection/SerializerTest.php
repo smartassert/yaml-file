@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\Tests\YamlFile\Services\SerializationDataSetFactory;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Collection\Serializer;
+use SmartAssert\YamlFile\Exception\Collection\SerializeException;
+use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
 use Symfony\Component\Yaml\Dumper;
 
@@ -24,6 +26,24 @@ class SerializerTest extends TestCase
                 new Dumper()
             )
         );
+    }
+
+    public function testSerializeThrowsException(): void
+    {
+        $provisionException = new ProvisionException();
+
+        $provider = \Mockery::mock(ProviderInterface::class);
+        $provider
+            ->shouldReceive('getYamlFiles')
+            ->andThrow($provisionException)
+        ;
+
+        try {
+            $this->serializer->serialize($provider);
+            self::fail(SerializeException::class . ' not thrown');
+        } catch (SerializeException $e) {
+            self::assertSame($provisionException, $e->getPrevious());
+        }
     }
 
     /**

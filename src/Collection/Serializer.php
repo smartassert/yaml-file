@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Collection;
 
+use SmartAssert\YamlFile\Exception\Collection\SerializeException;
 use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
@@ -20,21 +21,25 @@ class Serializer
     }
 
     /**
-     * @throws ProvisionException
+     * @throws SerializeException
      */
     public function serialize(ProviderInterface $provider): string
     {
         $fileHashes = new FileHashes();
         $documents = [];
 
-        /** @var YamlFile $yamlFile */
-        foreach ($provider->getYamlFiles() as $yamlFile) {
-            $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
-            $documentContent = $this->createDocument($yamlFile->content);
+        try {
+            /** @var YamlFile $yamlFile */
+            foreach ($provider->getYamlFiles() as $yamlFile) {
+                $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
+                $documentContent = $this->createDocument($yamlFile->content);
 
-            if (false === in_array($documentContent, $documents)) {
-                $documents[] = $documentContent;
+                if (false === in_array($documentContent, $documents)) {
+                    $documents[] = $documentContent;
+                }
             }
+        } catch (ProvisionException $provisionException) {
+            throw new SerializeException($provisionException);
         }
 
         $fileHashItems = $fileHashes->getItems();
