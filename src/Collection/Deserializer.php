@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
-use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
+use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\ExceptionInterface;
 use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;
 use SmartAssert\YamlFile\YamlFile;

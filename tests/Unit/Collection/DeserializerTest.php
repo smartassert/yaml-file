@@ -9,7 +9,7 @@ use SmartAssert\Tests\YamlFile\Services\SerializationDataSetFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
-use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
+use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidPathException;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;

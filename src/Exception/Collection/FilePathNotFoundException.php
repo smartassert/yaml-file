@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SmartAssert\YamlFile\Exception\CollectionDeserializer;
+namespace SmartAssert\YamlFile\Exception\Collection;
 
 use SmartAssert\YamlFile\FileHashes;
 
