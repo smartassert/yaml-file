@@ -8,7 +8,8 @@ use PHPUnit\Framework\TestCase;
 use SmartAssert\Tests\YamlFile\Services\SerializationDataSetFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
-use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
+use SmartAssert\YamlFile\Exception\Collection\DeserializeException;
+use SmartAssert\YamlFile\Exception\Collection\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidPathException;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;
@@ -33,19 +34,25 @@ class DeserializerTest extends TestCase
 
     public function testDeserializeFileHashesException(): void
     {
-        $content = <<< 'EOF'
-            ---
+        $fileHashesContent = <<< 'EOF'
             hash1:
                 - true
-            ...
+            EOF;
+
+        $content = <<< EOF
+            ---
+            {$fileHashesContent}
             ---
             content for path1.yaml
             ...
             EOF;
 
-        $this->expectExceptionObject(new InvalidPathException($content, 'hash1', 0));
-
-        $this->deserializer->deserialize($content);
+        try {
+            $this->deserializer->deserialize($content);
+            self::fail(DeserializeException::class . ' not thrown');
+        } catch (DeserializeException $e) {
+            self::assertEquals(new InvalidPathException($fileHashesContent, 'hash1', 0), $e->getPrevious());
+        }
     }
 
     public function testDeserializeFilePathNotFound(): void
@@ -53,19 +60,26 @@ class DeserializerTest extends TestCase
         $content = <<< 'EOF'
             ---
             hash1:
-                - path1hash
+                - path1
             ...
             ---
             content for path1.yaml
             ...
             EOF;
 
-        $this->expectExceptionObject(new FilePathNotFoundException(
-            'e1810158fa43e20800abda5f82bb7baa',
-            (new FileHashes())
-        ));
-
-        $this->deserializer->deserialize($content);
+        try {
+            $this->deserializer->deserialize($content);
+            self::fail(DeserializeException::class . ' not thrown');
+        } catch (DeserializeException $e) {
+            self::assertEquals(
+                new FilePathNotFoundException(
+                    'e1810158fa43e20800abda5f82bb7baa',
+                    (new FileHashes())
+                        ->add('path1', 'hash1')
+                ),
+                $e->getPrevious()
+            );
+        }
     }
 
     /**
