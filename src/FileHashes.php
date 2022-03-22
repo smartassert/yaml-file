@@ -7,19 +7,29 @@ namespace SmartAssert\YamlFile;
 class FileHashes
 {
     /**
-     * @var array<string, string>
+     * @var array<string, int>
+     */
+    private array $accessPointers = [];
+
+    /**
+     * @var array<string, array<int, string>>
      */
     private array $items = [];
 
     public function add(string $path, string $hash): self
     {
-        $this->items[$hash] = $path;
+        if (false === array_key_exists($hash, $this->items)) {
+            $this->items[$hash] = [];
+            $this->accessPointers[$hash] = 0;
+        }
+
+        $this->items[$hash][] = $path;
 
         return $this;
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array<int, string>>
      */
     public function getItems(): array
     {
@@ -28,6 +38,13 @@ class FileHashes
 
     public function getFilename(string $hash): ?string
     {
-        return $this->items[$hash] ?? null;
+        if (false === array_key_exists($hash, $this->accessPointers)) {
+            return null;
+        }
+
+        $filename = $this->items[$hash][$this->accessPointers[$hash]];
+        ++$this->accessPointers[$hash];
+
+        return $filename;
     }
 }
