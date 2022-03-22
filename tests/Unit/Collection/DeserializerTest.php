@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
 use PHPUnit\Framework\TestCase;
-use SmartAssert\YamlFile\Collection\ArrayCollection;
+use SmartAssert\Tests\YamlFile\Services\SerializationDataSetFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
 use SmartAssert\YamlFile\Collection\ProviderInterface;
 use SmartAssert\YamlFile\Exception\CollectionDeserializer\FilePathNotFoundException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidPathException;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Deserializer as FileHashesDeserializer;
-use SmartAssert\YamlFile\YamlFile;
 use Symfony\Component\Yaml\Parser as YamlParser;
 use webignition\YamlDocumentSetParser\Parser as DocumentSetParser;
 
@@ -82,83 +81,33 @@ class DeserializerTest extends TestCase
      */
     public function deserializeSuccessDataProvider(): array
     {
-        $filenames = ['file1.yaml', 'file2.yaml', 'file3.yaml', 'empty.yaml', 'duplicate-empty.yaml'];
-
-        $content = [
-            '- file1line1',
-            '- file2line1' . "\n" . '- file2line2',
-            '- file3line1' . "\n" . '- file3line2',
-            '', // intentionally empty
-            '', // intentionally empty
-        ];
-
-        $yamlFiles = [];
-        foreach ($filenames as $index => $filename) {
-            $yamlFiles[] = YamlFile::create($filename, $content[$index]);
-        }
-
-        $hashes = [];
-        foreach ($content as $item) {
-            $hashes[] = md5($item);
-        }
+        $serializationDataSetFactory = new SerializationDataSetFactory();
+        $emptyDataSet = $serializationDataSetFactory->createEmpty();
+        $singleFileWithSingleLineDataSet = $serializationDataSetFactory->createSingleFileWithSingleLine();
+        $singleEmptyFileDataSet = $serializationDataSetFactory->createSingleEmptyFile();
+        $singleFileWithMultipleLinesDataSet = $serializationDataSetFactory->createSingleFileWithMultipleLines();
+        $allDataSet = $serializationDataSetFactory->createAll();
 
         return [
             'empty' => [
-                'serialized' => '',
-                'expected' => new ArrayCollection([]),
+                'serialized' => $emptyDataSet->serialized,
+                'expected' => $emptyDataSet->provider,
             ],
             'single yaml file, single line' => [
-                'serialized' => <<< EOF
-                ---
-                {$hashes[0]}:
-                     - {$filenames[0]}
-                ...
-                ---
-                {$content[0]}
-                ...
-                EOF,
-                'expected' => new ArrayCollection([$yamlFiles[0]]),
+                'serialized' => $singleFileWithSingleLineDataSet->serialized,
+                'expected' => $singleFileWithSingleLineDataSet->provider,
+            ],
+            'single empty yaml file' => [
+                'serialized' => $singleEmptyFileDataSet->serialized,
+                'expected' => $singleEmptyFileDataSet->provider,
             ],
             'single multiline yaml file' => [
-                'serialized' => <<< EOF
-                ---
-                {$hashes[1]}:
-                    - {$filenames[1]}
-                ...
-                ---
-                {$content[1]}
-                ...
-                EOF,
-                'expected' => new ArrayCollection([$yamlFiles[1]]),
+                'serialized' => $singleFileWithMultipleLinesDataSet->serialized,
+                'expected' => $singleFileWithMultipleLinesDataSet->provider,
             ],
             'all' => [
-                'serialized' => <<< EOF
-                ---
-                {$hashes[0]}:
-                    - {$filenames[0]}
-                {$hashes[1]}:
-                    - {$filenames[1]}
-                {$hashes[2]}:
-                    - {$filenames[2]}
-                {$hashes[3]}:
-                    - {$filenames[3]}
-                    - {$filenames[4]}
-                ...
-                ---
-                {$content[0]}
-                ...
-                ---
-                {$content[1]}
-                ...
-                ---
-                {$content[2]}
-                ...
-                ---
-                ...
-                ---
-                ...                
-                EOF,
-                'expected' => new ArrayCollection($yamlFiles),
+                'serialized' => $allDataSet->serialized,
+                'expected' => $allDataSet->provider,
             ],
         ];
     }

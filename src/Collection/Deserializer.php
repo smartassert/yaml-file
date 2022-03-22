@@ -34,13 +34,15 @@ class Deserializer
 
         foreach ($documents as $document) {
             $documentHash = md5($document);
-            $filename = $fileHashes->getFilename($documentHash);
+            $filenames = $fileHashes->getFilenames($documentHash);
 
-            if (null === $filename) {
+            if ([] === $filenames) {
                 throw new FilePathNotFoundException($documentHash, $fileHashes);
             }
 
-            $yamlFiles[] = YamlFile::create($filename, $document);
+            foreach ($filenames as $filename) {
+                $yamlFiles[] = YamlFile::create($filename, $document);
+            }
         }
 
         return new ArrayCollection($yamlFiles);

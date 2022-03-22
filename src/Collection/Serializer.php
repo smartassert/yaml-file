@@ -30,7 +30,11 @@ class Serializer
         /** @var YamlFile $yamlFile */
         foreach ($provider->getYamlFiles() as $yamlFile) {
             $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
-            $documents[] = $this->createDocument($yamlFile->content);
+            $documentContent = $this->createDocument($yamlFile->content);
+
+            if (false === in_array($documentContent, $documents)) {
+                $documents[] = $documentContent;
+            }
         }
 
         $fileHashItems = $fileHashes->getItems();
