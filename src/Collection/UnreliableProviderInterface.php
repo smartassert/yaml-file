@@ -10,9 +10,9 @@ use SmartAssert\YamlFile\YamlFile;
 interface UnreliableProviderInterface extends ProviderInterface
 {
     /**
-     * @throws ProvisionException
-     *
      * @return \Generator<YamlFile>
+     *
+     * @throws ProvisionException
      */
     public function getYamlFiles(): \Generator;
 }
