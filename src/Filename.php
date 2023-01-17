@@ -43,13 +43,13 @@ class Filename implements \Stringable
 
         if (is_int($lastPathSeparatorPosition)) {
             $path = substr($value, 0, $lastPathSeparatorPosition);
-            $nameAndExtension = substr($value, ($lastPathSeparatorPosition) + 1);
+            $nameAndExtension = substr($value, $lastPathSeparatorPosition + 1);
         }
 
         $lastDotPosition = strrpos($nameAndExtension, self::EXTENSION_SEPARATOR);
 
         $name = false === $lastDotPosition ? $value : substr($nameAndExtension, 0, $lastDotPosition);
-        $extension = false === $lastDotPosition ? '' : substr($nameAndExtension, ($lastDotPosition) + 1);
+        $extension = false === $lastDotPosition ? '' : substr($nameAndExtension, $lastDotPosition + 1);
 
         return new Filename($path, $name, $extension);
     }
