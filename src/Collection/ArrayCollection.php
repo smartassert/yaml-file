@@ -6,7 +6,7 @@ namespace SmartAssert\YamlFile\Collection;
 
 use SmartAssert\YamlFile\YamlFile;
 
-class ArrayCollection implements AccessorInterface, ProviderInterface
+class ArrayCollection implements AccessorInterface, ProviderInterface, ArrayProviderInterface
 {
     /**
      * @var array<string, YamlFile>
@@ -35,5 +35,10 @@ class ArrayCollection implements AccessorInterface, ProviderInterface
         foreach ($this->yamlFiles as $yamlFile) {
             yield $yamlFile;
         }
+    }
+
+    public function getYamlFilesAsArray(): array
+    {
+        return $this->yamlFiles;
     }
 }
