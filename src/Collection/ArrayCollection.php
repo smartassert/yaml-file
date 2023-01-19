@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Collection;
 
+use SmartAssert\YamlFile\Collection\AccessorInterface as Accessor;
+use SmartAssert\YamlFile\Collection\ArrayProviderInterface as ArrayProvider;
+use SmartAssert\YamlFile\Collection\PrependableProviderInterface as PrependableProvider;
+use SmartAssert\YamlFile\Collection\ProviderInterface as Provider;
 use SmartAssert\YamlFile\YamlFile;
 
-class ArrayCollection implements AccessorInterface, ProviderInterface, ArrayProviderInterface
+class ArrayCollection implements Accessor, Provider, ArrayProvider, PrependableProvider
 {
     /**
      * @var array<string, YamlFile>
@@ -40,5 +44,13 @@ class ArrayCollection implements AccessorInterface, ProviderInterface, ArrayProv
     public function getYamlFilesAsArray(): array
     {
         return $this->yamlFiles;
+    }
+
+    public function prepend(YamlFile $file): ArrayCollection
+    {
+        $newYamlFiles = $this->yamlFiles;
+        array_unshift($newYamlFiles, $file);
+
+        return new ArrayCollection($newYamlFiles);
     }
 }
