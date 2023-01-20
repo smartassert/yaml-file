@@ -13,5 +13,5 @@ interface PrependableProviderInterface
      *
      * The implementation must return a new collection with the new file as the first item.
      */
-    public function prepend(YamlFile $file): ProviderInterface&PrependableProviderInterface;
+    public function prepend(YamlFile $file): PrependableProviderInterface;
 }
