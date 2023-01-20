@@ -14,15 +14,15 @@ use webignition\YamlDocumentSetParser\Parser as DocumentSetParser;
 class Deserializer
 {
     public function __construct(
-        private DocumentSetParser $documentSetParser,
-        private FileHashesDeserializer $fileHashesDeserializer,
+        private readonly DocumentSetParser $documentSetParser,
+        private readonly FileHashesDeserializer $fileHashesDeserializer,
     ) {
     }
 
     /**
      * @throws DeserializeException
      */
-    public function deserialize(string $content): ProviderInterface
+    public function deserialize(string $content): ProviderInterface&MutableProviderInterface
     {
         $yamlFiles = [];
         $documents = $this->documentSetParser->parse($content);
