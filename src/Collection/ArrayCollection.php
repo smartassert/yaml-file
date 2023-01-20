@@ -10,7 +10,7 @@ use SmartAssert\YamlFile\Collection\PrependableProviderInterface as PrependableP
 use SmartAssert\YamlFile\Collection\ProviderInterface as Provider;
 use SmartAssert\YamlFile\YamlFile;
 
-class ArrayCollection implements Accessor, Provider, ArrayProvider, PrependableProvider, MutableProviderInterface
+class ArrayCollection implements Accessor, Provider, ArrayProvider, PrependableProvider
 {
     /**
      * @var array<string, YamlFile>
@@ -52,15 +52,5 @@ class ArrayCollection implements Accessor, Provider, ArrayProvider, PrependableP
         array_unshift($newYamlFiles, $file);
 
         return new ArrayCollection($newYamlFiles);
-    }
-
-    public function extract(string $path): ?YamlFile
-    {
-        $yamlFile = $this->get($path);
-        if ($yamlFile instanceof YamlFile) {
-            unset($this->yamlFiles[$path]);
-        }
-
-        return $yamlFile;
     }
 }
