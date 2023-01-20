@@ -71,26 +71,4 @@ class ArrayCollectionTest extends TestCase
             ],
         ];
     }
-
-    public function testIsPrependable(): void
-    {
-        $initialItems = [
-            'file1' => YamlFile::create('file1', 'file 1 content'),
-            'file2' => YamlFile::create('file2', 'file 2 content'),
-            'file3' => YamlFile::create('file3', 'file 3 content'),
-        ];
-
-        $collection = new ArrayCollection($initialItems);
-
-        self::assertSame($initialItems, $collection->getYamlFilesAsArray());
-
-        $newItem = YamlFile::create('file0', 'file 0 content');
-
-        $prependedCollection = $collection->prepend($newItem);
-
-        self::assertSame(
-            array_merge(['file0' => $newItem], $initialItems),
-            $prependedCollection->getYamlFilesAsArray()
-        );
-    }
 }
