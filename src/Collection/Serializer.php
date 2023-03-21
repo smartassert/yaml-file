@@ -8,7 +8,6 @@ use SmartAssert\YamlFile\Exception\Collection\SerializeException;
 use SmartAssert\YamlFile\Exception\ProvisionException;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Serializer as FileHashesSerializer;
-use SmartAssert\YamlFile\YamlFile;
 
 class Serializer
 {
@@ -16,23 +15,29 @@ class Serializer
     private const DOCUMENT_END = '...';
 
     public function __construct(
-        private FileHashesSerializer $fileHashesSerializer,
+        private readonly FileHashesSerializer $fileHashesSerializer,
     ) {
     }
 
+    /**
+     * @throws SerializeException
+     */
     public function serialize(ProviderInterface $provider): string
     {
         $fileHashes = new FileHashes();
         $documents = [];
 
-        /** @var YamlFile $yamlFile */
-        foreach ($provider->getYamlFiles() as $yamlFile) {
-            $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
-            $documentContent = $this->createDocument($yamlFile->content);
+        try {
+            foreach ($provider->getYamlFiles() as $yamlFile) {
+                $fileHashes->add((string) $yamlFile->name, md5($yamlFile->content));
+                $documentContent = $this->createDocument($yamlFile->content);
 
-            if (false === in_array($documentContent, $documents)) {
-                $documents[] = $documentContent;
+                if (false === in_array($documentContent, $documents)) {
+                    $documents[] = $documentContent;
+                }
             }
+        } catch (ProvisionException $e) {
+            throw new SerializeException($e);
         }
 
         $fileHashItems = $fileHashes->getItems();
@@ -41,18 +46,6 @@ class Serializer
         }
 
         return implode("\n", $documents);
-    }
-
-    /**
-     * @throws SerializeException
-     */
-    public function serializeUnreliableProvider(UnreliableProviderInterface $provider): string
-    {
-        try {
-            return $this->serialize($provider);
-        } catch (ProvisionException $provisionException) {
-            throw new SerializeException($provisionException);
-        }
     }
 
     private function createDocument(string $content): string
