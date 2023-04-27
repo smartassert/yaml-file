@@ -30,7 +30,9 @@ class SerializerTest extends TestCase
 
     public function testSerializeThrowsException(): void
     {
-        $provisionException = new ProvisionException();
+        $provisionException = new ProvisionException(
+            new \Exception()
+        );
 
         $provider = \Mockery::mock(ProviderInterface::class);
         $provider
