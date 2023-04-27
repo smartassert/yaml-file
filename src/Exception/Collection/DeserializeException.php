@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace SmartAssert\YamlFile\Exception\Collection;
 
-class DeserializeException extends \Exception
+use SmartAssert\YamlFile\Exception\AbstractHasPreviousExceptionException;
+
+class DeserializeException extends AbstractHasPreviousExceptionException
 {
     public function __construct(\Throwable $previous)
     {
-        parent::__construct('Collection deserialization failed: ' . $previous->getMessage(), 0, $previous);
+        parent::__construct($previous, 'Collection deserialization failed: ' . $previous->getMessage());
     }
 }
