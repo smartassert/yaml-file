@@ -24,7 +24,7 @@ class ValidationTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function getErrorMessageDataProvider(): array
+    public static function getErrorMessageDataProvider(): array
     {
         return [
             'no error message, no previous' => [

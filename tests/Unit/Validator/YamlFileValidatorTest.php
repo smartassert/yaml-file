@@ -37,7 +37,7 @@ class YamlFileValidatorTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function validateDataProvider(): array
+    public static function validateDataProvider(): array
     {
         return [
             'invalid filename is invalid' => [

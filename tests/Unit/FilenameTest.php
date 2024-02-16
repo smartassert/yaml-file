@@ -36,7 +36,7 @@ class FilenameTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function filenameDataProvider(): array
+    public static function filenameDataProvider(): array
     {
         return [
             'empty' => [

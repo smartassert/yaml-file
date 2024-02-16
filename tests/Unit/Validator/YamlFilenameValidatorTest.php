@@ -26,7 +26,7 @@ class YamlFilenameValidatorTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function validateDataProvider(): array
+    public static function validateDataProvider(): array
     {
         return [
             'path invalid, part contains back slash' => [

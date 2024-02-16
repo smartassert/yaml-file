@@ -93,7 +93,7 @@ class DeserializerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function deserializeSuccessDataProvider(): array
+    public static function deserializeSuccessDataProvider(): array
     {
         $serializationDataSetFactory = new SerializationDataSetFactory();
         $emptyDataSet = $serializationDataSetFactory->createEmpty();

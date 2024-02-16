@@ -31,7 +31,7 @@ class SerializerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function serializeDataProvider(): array
+    public static function serializeDataProvider(): array
     {
         return [
             'empty' => [
