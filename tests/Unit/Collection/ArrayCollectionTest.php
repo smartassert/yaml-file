@@ -41,7 +41,7 @@ class ArrayCollectionTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function getDataProvider(): array
+    public static function getDataProvider(): array
     {
         $yamlFiles = [
             YamlFile::create('file1.yaml', '- file1 content'),

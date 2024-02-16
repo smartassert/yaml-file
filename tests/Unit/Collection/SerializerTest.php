@@ -59,7 +59,7 @@ class SerializerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function serializeSuccessDataProvider(): array
+    public static function serializeSuccessDataProvider(): array
     {
         $serializationDataSetFactory = new SerializationDataSetFactory();
         $emptyDataSet = $serializationDataSetFactory->createEmpty();

@@ -26,7 +26,7 @@ class ContentValidatorTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function validateDataProvider(): array
+    public static function validateDataProvider(): array
     {
         return [
             'empty is invalid' => [
