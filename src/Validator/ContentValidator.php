@@ -10,7 +10,7 @@ use SmartAssert\YamlFile\Validation\ValidationInterface;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
-class ContentValidator
+readonly class ContentValidator
 {
     public function __construct(
         private Parser $yamlParser,
@@ -19,10 +19,6 @@ class ContentValidator
 
     public function validate(string $content): ValidationInterface
     {
-        if ('' === trim($content)) {
-            return Validation::createInvalid(ContentContext::NOT_EMPTY);
-        }
-
         try {
             $this->yamlParser->parse($content);
         } catch (ParseException $e) {

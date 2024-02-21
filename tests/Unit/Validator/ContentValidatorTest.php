@@ -29,14 +29,6 @@ class ContentValidatorTest extends TestCase
     public static function validateDataProvider(): array
     {
         return [
-            'empty is invalid' => [
-                'content' => '',
-                'expected' => Validation::createInvalid(ContentContext::NOT_EMPTY),
-            ],
-            'whitespace-only is invalid' => [
-                'content' => " \t\n\r ",
-                'expected' => Validation::createInvalid(ContentContext::NOT_EMPTY),
-            ],
             'non-parseable yaml is invalid' => [
                 'content' => '  invalid' . "\n" . 'yaml',
                 'expected' => Validation::createInvalid(
