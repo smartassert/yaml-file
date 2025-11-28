@@ -30,7 +30,7 @@ class YamlFilenameValidatorTest extends TestCase
     {
         return [
             'path invalid, part contains back slash' => [
-                'filename' => new Filename('path/to/\\invalid', 'filename', 'yaml'),
+                'filename' => new Filename('path/to/\invalid', 'filename', 'yaml'),
                 'expected' => Validation::createInvalid(FilenameContext::PATH),
             ],
             'path invalid, part contains null byte' => [
@@ -46,7 +46,7 @@ class YamlFilenameValidatorTest extends TestCase
                 'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'name invalid, contains back slash' => [
-                'filename' => new Filename('path', 'contains\\backslash', 'yaml'),
+                'filename' => new Filename('path', 'contains\backslash', 'yaml'),
                 'expected' => Validation::createInvalid(FilenameContext::NAME),
             ],
             'name invalid, contains null byte' => [
