@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Validation\ContentContext;
 use SmartAssert\YamlFile\Validation\Validation;
@@ -13,9 +14,7 @@ use Symfony\Component\Yaml\Parser;
 
 class ContentValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider validateDataProvider
-     */
+    #[DataProvider('validateDataProvider')]
     public function testValidate(string $content, ValidationInterface $expected): void
     {
         $validator = new ContentValidator(new Parser());

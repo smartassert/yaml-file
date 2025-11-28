@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit\FileHashes;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\FileHashes;
 use SmartAssert\YamlFile\FileHashes\Serializer;
@@ -20,9 +21,7 @@ class SerializerTest extends TestCase
         $this->serializer = new Serializer(new Dumper());
     }
 
-    /**
-     * @dataProvider serializeDataProvider
-     */
+    #[DataProvider('serializeDataProvider')]
     public function testSerialize(FileHashes $fileHashes, string $expected): void
     {
         self::assertSame($expected, $this->serializer->serialize($fileHashes));

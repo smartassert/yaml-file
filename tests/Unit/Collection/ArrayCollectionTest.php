@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Collection\AccessorInterface;
 use SmartAssert\YamlFile\Collection\ArrayCollection;
@@ -30,9 +31,7 @@ class ArrayCollectionTest extends TestCase
         self::assertSame($yamlFiles, $providedYamlFiles);
     }
 
-    /**
-     * @dataProvider getDataProvider
-     */
+    #[DataProvider('getDataProvider')]
     public function testGet(AccessorInterface $accessor, string $path, ?YamlFile $expected): void
     {
         self::assertSame($expected, $accessor->get($path));

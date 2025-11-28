@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Filename;
 
 class FilenameTest extends TestCase
 {
-    /**
-     * @dataProvider filenameDataProvider
-     */
-    public function testToString(string $filename): void
-    {
-        self::assertSame($filename, (string) Filename::parse($filename));
+    #[DataProvider('filenameDataProvider')]
+    public function testToString(
+        string $value,
+        string $expectedPath,
+        string $expectedName,
+        string $expectedExtension
+    ): void {
+        self::assertSame($value, (string) Filename::parse($value));
     }
 
-    /**
-     * @dataProvider filenameDataProvider
-     */
+    #[DataProvider('filenameDataProvider')]
     public function testGetParts(
         string $value,
         string $expectedPath,
@@ -40,31 +41,31 @@ class FilenameTest extends TestCase
     {
         return [
             'empty' => [
-                'filename' => '',
+                'value' => '',
                 'expectedPath' => '',
                 'expectedName' => '',
                 'expectedExtension' => '',
             ],
             'name only' => [
-                'filename' => 'filename',
+                'value' => 'value',
                 'expectedPath' => '',
-                'expectedName' => 'filename',
+                'expectedName' => 'value',
                 'expectedExtension' => '',
             ],
             'extension only' => [
-                'filename' => '.yaml',
+                'value' => '.yaml',
                 'expectedPath' => '',
                 'expectedName' => '',
                 'expectedExtension' => 'yaml',
             ],
             'name and extension' => [
-                'filename' => 'filename.yaml',
+                'value' => 'filename.yaml',
                 'expectedPath' => '',
                 'expectedName' => 'filename',
                 'expectedExtension' => 'yaml',
             ],
             'has path' => [
-                'filename' => 'path/to/filename.yml',
+                'value' => 'path/to/filename.yml',
                 'expectedPath' => 'path/to',
                 'expectedName' => 'filename',
                 'expectedExtension' => 'yml',
