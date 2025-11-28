@@ -18,8 +18,7 @@ class Deserializer
 {
     public function __construct(
         private Parser $yamlParser,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ExceptionInterface

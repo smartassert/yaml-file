@@ -11,8 +11,7 @@ class Validation implements ValidationInterface
         private readonly ?ContextInterface $context,
         private readonly ?string $errorMessage,
         private readonly ?ValidationInterface $previous,
-    ) {
-    }
+    ) {}
 
     public static function createValid(): ValidationInterface
     {

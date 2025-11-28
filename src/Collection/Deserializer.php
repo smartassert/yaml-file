@@ -16,8 +16,7 @@ class Deserializer
     public function __construct(
         private DocumentSetParser $documentSetParser,
         private FileHashesDeserializer $fileHashesDeserializer,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws DeserializeException
