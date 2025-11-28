@@ -14,8 +14,7 @@ class YamlFileValidator
     public function __construct(
         private readonly YamlFilenameValidator $yamlFilenameValidator,
         private readonly ContentValidator $contentValidator,
-    ) {
-    }
+    ) {}
 
     public function validate(YamlFile $yamlFile): ValidationInterface
     {

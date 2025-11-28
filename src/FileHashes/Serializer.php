@@ -11,8 +11,7 @@ class Serializer
 {
     public function __construct(
         private Dumper $yamlDumper,
-    ) {
-    }
+    ) {}
 
     public function serialize(FileHashes $fileHashes): string
     {

@@ -16,8 +16,7 @@ class Serializer
 
     public function __construct(
         private readonly FileHashesSerializer $fileHashesSerializer,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws SerializeException

@@ -13,8 +13,7 @@ class Filename implements \Stringable
         public readonly string $path,
         public readonly string $name,
         public readonly string $extension,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

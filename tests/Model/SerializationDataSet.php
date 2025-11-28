@@ -11,6 +11,5 @@ class SerializationDataSet
     public function __construct(
         public readonly ProviderInterface $provider,
         public readonly string $serialized
-    ) {
-    }
+    ) {}
 }

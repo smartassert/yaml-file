@@ -9,8 +9,7 @@ class YamlFile
     public function __construct(
         public readonly Filename $name,
         public readonly string $content,
-    ) {
-    }
+    ) {}
 
     public static function create(string $name, string $content): YamlFile
     {

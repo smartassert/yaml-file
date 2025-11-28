@@ -14,8 +14,7 @@ readonly class ContentValidator
 {
     public function __construct(
         private Parser $yamlParser,
-    ) {
-    }
+    ) {}
 
     public function validate(string $content): ValidationInterface
     {
