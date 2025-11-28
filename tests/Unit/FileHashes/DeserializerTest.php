@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit\FileHashes;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\DecodeException;
 use SmartAssert\YamlFile\Exception\FileHashesDeserializer\InvalidHashException;
@@ -112,9 +113,7 @@ class DeserializerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider deserializeSuccessDataProvider
-     */
+    #[DataProvider('deserializeSuccessDataProvider')]
     public function testDeserializeSuccess(string $content, FileHashes $expected): void
     {
         self::assertEquals($expected, $this->deserializer->deserialize($content));

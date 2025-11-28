@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SmartAssert\Tests\YamlFile\Unit\Collection;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartAssert\Tests\YamlFile\Services\SerializationDataSetFactory;
 use SmartAssert\YamlFile\Collection\Deserializer;
@@ -82,9 +83,7 @@ class DeserializerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider deserializeSuccessDataProvider
-     */
+    #[DataProvider('deserializeSuccessDataProvider')]
     public function testDeserializeSuccess(string $serialized, ProviderInterface $expected): void
     {
         self::assertEquals($expected, $this->deserializer->deserialize($serialized));
