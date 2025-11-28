@@ -34,7 +34,7 @@
         }
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "symfony/yaml": "^6.4 || ^7.0",
         "webignition/yaml-document-set-parser": ">=2.0,<3"
     },
